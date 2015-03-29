@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include "arbitre.h"
+#include <time.h>
+#include <stdlib.h>
+//#include "arbitre.h"
 #include "backgammon.h"
 
 //////////////////////////////////////////////////////////
@@ -50,6 +52,19 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 	printf("PlayTurn\n");
 }
 
+// rollDice prend en paramètre le nombre de dés à lancer et renvoie un pointeur vers un array de résultats en unsigned int
+
+unsigned int *rollDice(int nbDice)
+{
+	unsigned int *roll=malloc(sizeof(unsigned int)*nbDice);
+	int i;
+	for(i=0;i<nbDice;i++)
+	{
+		roll[i]=(rand() % 5)+1;
+	}
+	return roll;
+}
+
 
 //////////////////////////////////////////////////////////
 // Dans l'exécutable
@@ -59,7 +74,7 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 int main()
 {
 	//*****// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici)
-	SGameState &gameState;
+	SGameState gameState;
 	SMove moves[4];
 
 	//*****// à faire pour chaque joueur
@@ -83,24 +98,27 @@ int main()
 	pfDoubleStack j2DoubleStack=DoubleStack;
 	pfTakeDouble j2TakeDouble=TakeDouble;
 	pfPlayTurn j2PlayTurn=PlayTurn;
-	pfTakeDouble j2TakeDouble=TakeDouble;
 
 	// Initialisation de la librairie
 	char name[50];
 	j1InitLibrary(name);
 	j1StartMatch(5);
 
+	unsigned int *diceResult;
 	unsigned int nbMoves;
 	unsigned char dices[2];
+	int player;
 
 	while (IsMatchOver(&gameState)!=1)
 	{
 		j1StartGame(BLACK);
 		j2StartGame(WHITE);
 		//int player = plus gros roll
+		diceResult=rollDice(2);
+		if(*diceResult > *(diceResult+1)) { player=1; }else{ player=2; }
 		while (IsGameOver(gameState)!=1)
 		{
-		  if (player==1)
+		  if (player==1) 
 		  {
 			if (j1DoubleStack(&gameState))
 				j2TakeDouble(&gameState);
