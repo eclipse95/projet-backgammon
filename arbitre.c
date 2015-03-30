@@ -3,6 +3,8 @@
 #include <string.h>
 #include "backgammon.h"
 
+srand((unsigned) time(&t)); //permet de créer une nouvelle seed radom (donc de "relancer" le tableau à chaque compilation)
+
 int IsMatchOver(SGameState *gameState)
 {
   if (gameState->bar[BLACK]==15)/*pions noirs sur last case = 15*/
