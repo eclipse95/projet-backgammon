@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-//#include "arbitre.h"
+#include "arbitre.h"
 #include "backgammon.h"
 
 //////////////////////////////////////////////////////////
@@ -113,12 +113,11 @@ int main()
 	{
 		j1StartGame(BLACK);
 		j2StartGame(WHITE);
-		//int player = plus gros roll
 		diceResult=rollDice(2);
-		if(*diceResult > *(diceResult+1)) { player=1; }else{ player=2; }
+		if(diceResult[0] > diceResult[1]) { player=WHITE; }else{ player=BLACK; } //"arithmétique des pointeurs c pas tres lisible en projet" dixit vincent
 		while (IsGameOver(gameState)!=1)
 		{
-		  if (player==1) 
+		  if (player==BLACK) 
 		  {
 			if (j1DoubleStack(&gameState))
 				j2TakeDouble(&gameState);
@@ -126,13 +125,13 @@ int main()
 			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
 			player=2;
 		  }
-		  else if (player==2)
+		  else if (player==WHITE)
 		  {
 			if (j2DoubleStack(&gameState))
 				j1TakeDouble(&gameState);
 			j2PlayTurn(&gameState,dices,moves,&nbMoves,3);
 			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
-			player=1;
+			player=BLACK;
 		  }
 		}
 		j1EndGame();
