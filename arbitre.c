@@ -36,9 +36,9 @@ int IsGameOver(SGameState *gameState)
 }
 
 SGameState* InitState()              /*  12 ---- 23
-					                	            11 ---- 0	  VOIR IMAGE WIKIPEDIA */
+					 11 ---- 0	  VOIR IMAGE WIKIPEDIA */
 {
-  SGameState* gameState = malloc(sizeof(SGameState));	//allocation mémoire	//penser au free()
+  SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire	//penser au free()
   gameState->board[0].owner=1;
   gameState->board[0].nbDames=2;
   gameState->board[11].owner=1;
@@ -57,10 +57,6 @@ SGameState* InitState()              /*  12 ---- 23
   gameState->board[23].nbDames=2;
   gameState->whiteScore=0;
   gameState->blackScore=0;
-  //gameState->bar[0]->; quest ce que bar ? surement les cases de victoire
-  //gameState->out[0]->; quest ce que out ? surement les cases ou vont ceux qui sont bouffés
-  //gameState->bar[1]->;
-  //gameState->out[1]->;
   gameState->turn=0;
   gameState->stake=1;
 
