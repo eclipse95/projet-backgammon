@@ -103,8 +103,12 @@ int main()
 	{
 		j1StartGame(BLACK);
 		j2StartGame(WHITE);
-		diceResult=rollDice(2);
-		if(diceResult[0] > diceResult[1]) { player=WHITE; }else{ player=BLACK; } //"arithmétique des pointeurs c pas tres lisible en projet" dixit vincent
+		player=NOBODY;
+		while (player==NOBODY)
+		{
+			diceResult=rollDice(2);
+			if(diceResult[0] > diceResult[1]) { player=WHITE; }else{ player=BLACK; } //"arithmétique des pointeurs c pas tres lisible en projet" dixit vincent
+		}
 		while (IsGameOver(gameState)!=1)
 		{
 		  if (player==BLACK) 
@@ -113,7 +117,9 @@ int main()
 				j2TakeDouble(&gameState);
 			j1PlayTurn(&gameState,dices,moves,&nbMoves,3);
 			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
-			player=2;
+			//faire le mouvement
+			emptyMoves(moves);
+			player=WHITE;
 		  }
 		  else if (player==WHITE)
 		  {
@@ -121,6 +127,8 @@ int main()
 				j1TakeDouble(&gameState);
 			j2PlayTurn(&gameState,dices,moves,&nbMoves,3);
 			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
+			//faire le mouvement
+			emptyMoves(moves);
 			player=BLACK;
 		  }
 		}
