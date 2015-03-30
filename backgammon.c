@@ -5,6 +5,8 @@
 #include "arbitre.h"
 #include "backgammon.h"
 
+  srand((unsigned) time(&t)); //permet de créer une nouvelle seed radom (donc de "relancer" le tableau à chaque compilation)
+
 //////////////////////////////////////////////////////////
 // Dans la librairie
 //
