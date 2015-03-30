@@ -63,3 +63,10 @@ unsigned int* rollDice(int nbDice)
 	}
 	return roll;
 }
+
+SMoves[2] emptyMoves(SMoves moves, int player)
+{
+	moves[player].src_point=0;
+	moves[player].dest_point=0;
+	return moves;
+}
