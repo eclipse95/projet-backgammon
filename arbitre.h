@@ -6,3 +6,4 @@
 int IsMatchOver(SGameState *gameState);
 int IsGameOver(SGameState *gameState);
 SGameState InitState();
+unsigned int* rollDice(int nbDice);
