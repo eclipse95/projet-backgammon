@@ -118,7 +118,7 @@ int main()
 			j1PlayTurn(&gameState,dices,moves,&nbMoves,3);
 			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
 			//faire le mouvement
-			emptyMoves(moves);
+			emptyMoves(moves,BLACK);
 			player=WHITE;
 		  }
 		  else if (player==WHITE)
@@ -128,7 +128,7 @@ int main()
 			j2PlayTurn(&gameState,dices,moves,&nbMoves,3);
 			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
 			//faire le mouvement
-			emptyMoves(moves);
+			emptyMoves(moves,WHITE);
 			player=BLACK;
 		  }
 		}
