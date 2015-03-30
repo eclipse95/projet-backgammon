@@ -38,7 +38,7 @@ int IsGameOver(SGameState *gameState)
 SGameState* InitState()              /*  12 ---- 23
 					                	            11 ---- 0	  VOIR IMAGE WIKIPEDIA */
 {
-  SGameState* gameState;
+  SGameState* gameState = malloc(sizeof(SGameState));	//allocation mémoire	//penser au free()
   gameState->board[0].owner=1;
   gameState->board[0].nbDames=2;
   gameState->board[11].owner=1;
