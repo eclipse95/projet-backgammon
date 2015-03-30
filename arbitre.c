@@ -5,55 +5,43 @@
 
 int IsMatchOver(SGameState *gameState)
 {
-  if (gameState->bar[0]==15)/*pions noirs sur last case = 15*/
-  {
-	return 0;
-  }
-  else if (gameState->bar[1]==15)/*pions blancs sur last case = 15*/
-  {
-	return 1;
-  }
+  if (gameState->bar[BLACK]==15)/*pions noirs sur last case = 15*/
+  { return 0; }
+  else if (gameState->bar[WHITE]==15)/*pions blancs sur last case = 15*/
+  { return 1; }
   else
-  {
-	return -1;
-  }
+  { return -1; }
 }
 
 int IsGameOver(SGameState *gameState)
 {
-  if (gameState->whiteScore==3)
-  {
-	return 0;
-  }
-  else if (gameState->blackScore==3)
-  {
-	return 1;
-  }
+  if (gameState->whiteScore==5)
+  { return WHITE; }
+  else if (gameState->blackScore==5)
+  { return BLACK; }
   else
-  {
-	return -1;
-  }
+  { return NOBODY; }
 }
 
 SGameState* InitState()              /*  12 ---- 23
 					 11 ---- 0	  VOIR IMAGE WIKIPEDIA */
 {
   SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire	//penser au free()
-  gameState->board[0].owner=1;
+  gameState->board[0].owner=WHITE;
   gameState->board[0].nbDames=2;
-  gameState->board[11].owner=1;
+  gameState->board[11].owner=WHITE;
   gameState->board[11].nbDames=5;
-  gameState->board[16].owner=1;
+  gameState->board[16].owner=WHITE;
   gameState->board[16].nbDames=3;
-  gameState->board[18].owner=1;
+  gameState->board[18].owner=WHITE;
   gameState->board[18].nbDames=5;
-  gameState->board[5].owner=0;
+  gameState->board[5].owner=BLACK;
   gameState->board[5].nbDames=5;
-  gameState->board[7].owner=0;
+  gameState->board[7].owner=BLACK;
   gameState->board[7].nbDames=3;
-  gameState->board[12].owner=0;
+  gameState->board[12].owner=BLACK;
   gameState->board[12].nbDames=5;
-  gameState->board[23].owner=0;
+  gameState->board[23].owner=BLACK;
   gameState->board[23].nbDames=2;
   gameState->whiteScore=0;
   gameState->blackScore=0;
