@@ -63,33 +63,53 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 //void deroulement_du_jeu()	
 int main()
 {
+	void* libj1, libj2;
 	//*****// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici)
 	SGameState gameState;
 	SMove moves[4];
 
-	//*****// à faire pour chaque joueur
-	
-	// Chargement de la librairie (chargement des pointeurs de fonctions des fonctions décrites dans "backgammon.h")
-	// -> à ermplacer par votre code de chargement
+	// Chargement des bibliothèques et de leurs fonctions
+	if ((libj1=dlopen("libj1.so",RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j1InitLibrary=InitLibrary;
+	if ((j1InitLibrary=(pfInitLibrary)dlsym(libj1,"InitLibrary"))==NULL) { return(-1); }
 	pfStartMatch j1StartMatch=StartMatch;
+	if ((j1StartMatch=(pfStartMatch)dlsym(libj1,"StartMatch"))==NULL) { return(-1); }
 	pfStartGame j1StartGame=StartGame;
+	if ((j1StartGame=(pfStartGame)dlsym(libj1,"StartGame"))==NULL) { return(-1); }
 	pfEndGame j1EndGame=EndGame;
+	if ((j1EndGame=(pfEndGame)dlsym(libj1,"EndGame"))==NULL) { return(-1); }
 	pfEndMatch j1EndMatch=EndMatch;
+	if ((j1EndMatch=(pfEndMatch)dlsym(libj1,"EndMatch"))==NULL) { return(-1); }
 	pfDoubleStack j1DoubleStack=DoubleStack;
+	if ((j1DoubleStack=(pfDoubleStack)dlsym(libj1,"DoubleStack"))==NULL) { return(-1); }
 	pfTakeDouble j1TakeDouble=TakeDouble;
+	if ((j1TakeDouble=(pfTakeDouble)dlsym(libj1,"TakeDouble"))==NULL) { return(-1); }
 	pfPlayTurn j1PlayTurn=PlayTurn;
+	if ((j1PlayTurn=(pfPlayTurn)dlsym(libj1,"PlayTurn"))==NULL) { return(-1); }
 	
+	if ((libj2=dlopen("libj2.so",RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j2InitLibrary=InitLibrary;
+	if ((j2InitLibrary=(pfInitLibrary)dlsym(libj2,"InitLibrary"))==NULL) { return(-1); }
 	pfStartMatch j2StartMatch=StartMatch;
+	if ((j2StartMatch=(pfStartMatch)dlsym(libj2,"StartMatch"))==NULL) { return(-1); }
 	pfStartGame j2StartGame=StartGame;
+	if ((j2StartGame=(pfStartGame)dlsym(libj2,"StartGame"))==NULL) { return(-1); }
 	pfEndGame j2EndGame=EndGame;
+	if ((j2EndGame=(pfEndGame)dlsym(libj2,"EndGame"))==NULL) { return(-1); }
 	pfEndMatch j2EndMatch=EndMatch;
+	if ((j2EndMatch=(pfEndMatch)dlsym(libj2,"EndMatch"))==NULL) { return(-1); }
 	pfDoubleStack j2DoubleStack=DoubleStack;
+	if ((j2DoubleStack=(pfDoubleStack)dlsym(libj2,"DoubleStack"))==NULL) { return(-1); }
 	pfTakeDouble j2TakeDouble=TakeDouble;
+	if ((j2TakeDouble=(pfTakeDouble)dlsym(libj2,"TakeDouble"))==NULL) { return(-1); }
 	pfPlayTurn j2PlayTurn=PlayTurn;
+	if ((j2PlayTurn=(pfPlayTurn)dlsym(libj2,"PlayTurn"))==NULL) { return(-1); }
 
-	// Initialisation de la librairie
+	
+	
+
+
+	// Initialisation de la bibliothèque
 	char name[50];
 	j1InitLibrary(name);
 	j1StartMatch(5);
@@ -137,6 +157,7 @@ int main()
 	}
 	j1EndMatch();
 	j2EndMatch();
-
+	dlclose(libj1);//libération des bibliothèques
+	dlclose(libj2);
 	return(0);
 }
