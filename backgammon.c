@@ -52,18 +52,6 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 	printf("PlayTurn\n");
 }
 
-// rollDice prend en paramètre le nombre de dés à lancer et renvoie un pointeur vers un array de résultats en unsigned int
-
-unsigned int *rollDice(int nbDice)
-{
-	unsigned int *roll=malloc(sizeof(unsigned int)*nbDice); //penser a free à la fin du main ptet
-	int i;
-	for(i=0;i<nbDice;i++)
-	{
-		roll[i]=(rand() % 5)+1;
-	}
-	return roll;
-}
 
 
 //////////////////////////////////////////////////////////
