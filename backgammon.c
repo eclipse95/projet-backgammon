@@ -56,7 +56,7 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 unsigned int *rollDice(int nbDice)
 {
-	unsigned int *roll=malloc(sizeof(unsigned int)*nbDice);
+	unsigned int *roll=malloc(sizeof(unsigned int)*nbDice); //penser a free à la fin du main ptet
 	int i;
 	for(i=0;i<nbDice;i++)
 	{
