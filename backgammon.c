@@ -128,8 +128,9 @@ int main()
 		}
 		while (IsGameOver(gameState)!=-1)
 		{
-		  if (player==BLACK) 
-		  {
+		InitBoard(gameState);
+		if (player==BLACK)
+		{
 		  	//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
 			if (j1DoubleStack(&gameState)!=0)
 			{
@@ -156,10 +157,10 @@ int main()
 			//faire le mouvement
 			emptyMoves(moves);
 			player=WHITE;
-		  }
-		  else if (player==WHITE)
-		  {
-		  	//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
+		}
+		else if (player==WHITE)
+		{
+		//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
 			if (j2DoubleStack(&gameState)!=0)
 			{
 				if (j1TakeDouble(&gameState)!=0)
