@@ -26,48 +26,47 @@ int IsGameOver(SGameState *gameState)
 }
 
 
-SGameState* InitBoard()
+void InitBoard(SGameState* gameState)
 {
 	int i;
- for (i=0; i<12; i++)
- {
- 	switch(i)
- 	{
-  	case 0 :
-  		gameState->board[i].nbDames=2;
-  		gameState->board[i].owner=WHITE;
-  		gameState->board[23-i].nbDames=2;
-  		gameState->board[23-i].owner=BLACK;
-  		break;
-  	case 5 :
-  		gameState->board[i].nbDames=5;
-  		gameState->board[i].owner=BLACK;
-  		gameState->board[23-i].nbDames=5;
-  		gameState->board[23-i].owner=WHITE;
-  		break;
-   	case 7 :
-    		gameState->board[i].nbDames=3;
-    		gameState->board[i].owner=BLACK;
-  		gameState->board[23-i].nbDames=3;
-  		gameState->board[23-i].owner=WHITE;
-  		break;
-  	case 11 :
-   		gameState->board[i].nbDames=5;
-   		gameState->board[i].owner=WHITE;
-  		gameState->board[23-i].nbDames=5;
-  		gameState->board[23-i].owner=BLACK;
-  		break;
-  	default:
-  		gameState->board[i].nbDames=0;
-  		gameState->board[i].owner=NOBODY;
-  		gameState->board[23-i].nbDames=0;
-    		gameState->board[23-i].owner=NOBODY;
-  		break;
-  	}
-  }
-  gameState->stake=1;
-  gameState->turn=0;
-  return gameState;
+	for (i=0; i<12; i++)
+	{
+		switch(i)
+		{
+	 	case 0 :
+	 		gameState->board[i].nbDames=2;
+	 		gameState->board[i].owner=WHITE;
+	  		gameState->board[23-i].nbDames=2;
+	  		gameState->board[23-i].owner=BLACK;
+	  		break;
+	  	case 5 :
+	  		gameState->board[i].nbDames=5;
+	  		gameState->board[i].owner=BLACK;
+	  		gameState->board[23-i].nbDames=5;
+	  		gameState->board[23-i].owner=WHITE;
+	  		break;
+	   	case 7 :
+	    		gameState->board[i].nbDames=3;
+	    		gameState->board[i].owner=BLACK;
+	  		gameState->board[23-i].nbDames=3;
+	  		gameState->board[23-i].owner=WHITE;
+	  		break;
+	  	case 11 :
+	   		gameState->board[i].nbDames=5;
+	   		gameState->board[i].owner=WHITE;
+	  		gameState->board[23-i].nbDames=5;
+	  		gameState->board[23-i].owner=BLACK;
+	  		break;
+	  	default:
+	  		gameState->board[i].nbDames=0;
+	  		gameState->board[i].owner=NOBODY;
+	  		gameState->board[23-i].nbDames=0;
+	    		gameState->board[23-i].owner=NOBODY;
+	  		break;
+	 	}
+	 }
+	 gameState->stake=1;
+	 gameState->turn=0;
 }
 
 
@@ -75,7 +74,7 @@ SGameState* InitState()              /*  12 ---- 23
 					 11 ---- 0	  VOIR IMAGE WIKIPEDIA */
 {
   SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire
-  gameState=InitBoard(gameState);
+  InitBoard(gameState);
   gameState->bar[WHITE].nbDames=0;
   gameState->bar[WHITE].owner=NOBODY;
   gameState->bar[BLACK].nbDames=0;
@@ -100,7 +99,7 @@ unsigned int* rollDice(unsigned int* dice)
 	return dice;
 }
 
-SMoves[2] emptyMoves(SMoves moves) //on vide les moves après chaque mouvement effectué
+SMoves[2] emptyMoves(SMoves moves) //on vide les moves après chaque mouvement effectué //attention si tableau de 4
 {
 	moves[0].src_point=0;
 	moves[0].dest_point=0;
