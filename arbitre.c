@@ -29,8 +29,22 @@ SGameState* InitState()              /*  12 ---- 23
 					 11 ---- 0	  VOIR IMAGE WIKIPEDIA */
 {
   SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire	//penser au free()
+  
+  int i;
+  /*for (i=0; i<12; i++)
+  {
+  	switch(i)
+  	{
+  	case 0 :
+  		gameState->board[i].nbDames=2;
+  		gameState->board[23-i].nbDames=2;
+  	case 5 :
+  		gameState->board[i].nbDames=;
+  		gameState->board[23-i].nbDames=2;
+  	}
+  }
   gameState->board[0].owner=WHITE;
-  gameState->board[0].nbDames=2;
+  //gameState->board[0].nbDames=2;
   gameState->board[11].owner=WHITE;
   gameState->board[11].nbDames=5;
   gameState->board[16].owner=WHITE;
@@ -44,7 +58,8 @@ SGameState* InitState()              /*  12 ---- 23
   gameState->board[12].owner=BLACK;
   gameState->board[12].nbDames=5;
   gameState->board[23].owner=BLACK;
-  gameState->board[23].nbDames=2;
+  //gameState->board[23].nbDames=2;
+  */
   gameState->whiteScore=0;
   gameState->blackScore=0;
   gameState->turn=0;
