@@ -7,9 +7,8 @@
 
 srand((unsigned) time(&t)); //permet de créer une nouvelle seed radom (donc de "relancer" le tableau à chaque compilation)
 
-//////////////////////////////////////////////////////////
-// Dans la librairie
-//
+
+// Dans la librairie /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
 
 void InitLibrary(char name[50])
 {
@@ -37,13 +36,13 @@ void EndMatch()
 	printf("EndMatch\n");
 }
 
-int DoubleStack(const SGameState * const gameState)
+int DoubleStack(const SGameState * const gameState) //demande videau // pb : stocker qui l'a demandé pour pas lui redemander
 {
 	printf("DoubleStack\n");
 	return(0);
 }
 
-int TakeDouble(const SGameState * const gameState)
+int TakeDouble(const SGameState * const gameState) //réponse
 {
 	printf("TakeDouble\n");
 	return(0);
@@ -55,20 +54,18 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 }
 
 
+// Dans l'exécutable  /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////
-// Dans l'exécutable
-//
-
-//void deroulement_du_jeu()	
+//void deroulement_du_jeu()  --->>> mis par le prof	
 int main()
 {
 	void* libj1, libj2;
-	//*****// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici)
+	// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici) ---->>> mis par le prof
 	SGameState gameState;
 	SMove moves[4];
 
-	// Chargement des bibliothèques et de leurs fonctions
+	//// Chargement des bibliothèques et de leurs fonctions
+	//Joueur 1
 	if ((libj1=dlopen("libj1.so",RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j1InitLibrary=InitLibrary;
 	if ((j1InitLibrary=(pfInitLibrary)dlsym(libj1,"InitLibrary"))==NULL) { return(-1); }
@@ -87,6 +84,7 @@ int main()
 	pfPlayTurn j1PlayTurn=PlayTurn;
 	if ((j1PlayTurn=(pfPlayTurn)dlsym(libj1,"PlayTurn"))==NULL) { return(-1); }
 	
+	//Joueur 2
 	if ((libj2=dlopen("libj2.so",RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j2InitLibrary=InitLibrary;
 	if ((j2InitLibrary=(pfInitLibrary)dlsym(libj2,"InitLibrary"))==NULL) { return(-1); }
@@ -105,14 +103,13 @@ int main()
 	pfPlayTurn j2PlayTurn=PlayTurn;
 	if ((j2PlayTurn=(pfPlayTurn)dlsym(libj2,"PlayTurn"))==NULL) { return(-1); }
 
-	
-	
-
-
-	// Initialisation de la bibliothèque
-	char name[50];
-	j1InitLibrary(name);
+	//// Initialisation de la bibliothèque de chaque joueur du match
+	char name1[50];
+	char name2[50];
+	j1InitLibrary(name1);
+	j2InitLibrary(name2);
 	j1StartMatch(5);
+	j2StartMatch(5);
 
 	unsigned int *diceResult;
 	unsigned int nbMoves;
