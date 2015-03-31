@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "backgammon.h"
+#include <time.h>
 
-srand((unsigned) time(&t)); //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
-
+//srand(time(NULL)); //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
+// à deplacer, ne peut pas être utiliser ici    // relance à chaque EXECUTION
 int IsMatchOver(SGameState *gameState)
 {
   if (gameState->bar[BLACK]==15)/*pions noirs sur last case = 15*/
@@ -91,6 +92,7 @@ SGameState* InitState()              /*  12 ---- 23
 // rollDice prend en paramètre le nombre de dés à lancer et renvoie un pointeur vers un array de résultats en unsigned int
 unsigned int* rollDice(unsigned int* dice)
 {
+    srand(time(NULL));     //
 	int i;
 	for(i=0;i<2;i++)
 	{

@@ -5,7 +5,7 @@
 #include "arbitre.h"
 #include "backgammon.h"
 
-srand((unsigned) time(&t)); //permet de créer une nouvelle seed radom (donc de "relancer" le tableau à chaque compilation)
+//srand((unsigned) time(&t)); //permet de créer une nouvelle seed radom (donc de "relancer" le tableau à chaque compilation)
 
 
 // Dans la librairie /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 // Dans l'exécutable  /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
 
-//void deroulement_du_jeu()  --->>> mis par le prof	
+//void deroulement_du_jeu()  --->>> mis par le prof
 int main()
 {
 	void* libj1, libj2;
@@ -83,7 +83,7 @@ int main()
 	if ((j1TakeDouble=(pfTakeDouble)dlsym(libj1,"TakeDouble"))==NULL) { return(-1); }
 	pfPlayTurn j1PlayTurn=PlayTurn;
 	if ((j1PlayTurn=(pfPlayTurn)dlsym(libj1,"PlayTurn"))==NULL) { return(-1); }
-	
+
 	//Joueur 2
 	if ((libj2=dlopen("libj2.so",RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j2InitLibrary=InitLibrary;
@@ -111,7 +111,7 @@ int main()
 	j1StartMatch(5);
 	j2StartMatch(5);
 
-	unsigned int *roll=malloc(sizeof(unsigned int)*2);
+	unsigned int *roll=malloc(sizeof(unsigned int)*2);		// un tableau statique suffirai // unsigned int roll[2];
 	unsigned int nbMoves;
 	unsigned char dices[2];
 	int player;
@@ -124,7 +124,7 @@ int main()
 		while (player==NOBODY)
 		{
 			dices=rollDice(roll);
-			if(dices[BLACK] > dices[WHITE]) { player=BLACK; }else{ player=WHITE; } 
+			if(dices[BLACK] > dices[WHITE]) { player=BLACK; }else{ player=WHITE; }
 		}
 		while (IsGameOver(gameState)!=-1)
 		{
@@ -183,14 +183,14 @@ int main()
 			}
 		  }
 		}
-		if (IsGameOver(gameState)==BLACK) 
-		{ 
+		if (IsGameOver(gameState)==BLACK)
+		{
 			gameState->blackScore+=gameState->stake;
 			printf("Les Noirs gagnent cette manche et %i points !", gameState->stake);
 		}
-		else if (IsGameOver(gameState)==WHITE) 
-		{ 
-			gameState->whiteScore+=gameState->stake; 
+		else if (IsGameOver(gameState)==WHITE)
+		{
+			gameState->whiteScore+=gameState->stake;
 			printf("Les Blancs gagnent cette manche et %i points !\n", gameState->stake);
 		}
 		else { return -1; } //gestion d'erreur plus précise
@@ -202,7 +202,7 @@ int main()
 	else { return -1; }
 	j1EndMatch();
 	j2EndMatch();
-	
+
 	dlclose(libj1); //libération des bibliothèques
 	dlclose(libj2);
 	free(roll);
