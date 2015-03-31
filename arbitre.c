@@ -4,8 +4,8 @@
 #include "backgammon.h"
 #include <time.h>
 
-//srand(time(NULL)); //permet de crÃ©er une nouvelle seed random (donc de "relancer" le tableau Ã  chaque compilation)
-// Ã  deplacer, ne peut pas Ãªtre utiliser ici    // relance Ã  chaque EXECUTION
+//srand(time(NULL)); //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
+// à deplacer, ne peut pas être utiliser ici    // relance à chaque EXECUTION
 int IsMatchOver(SGameState *gameState)
 {
   if (gameState->bar[BLACK]==15)/*pions noirs sur last case = 15*/
@@ -74,7 +74,7 @@ void InitBoard(SGameState* gameState)
 SGameState* InitState()              /*  12 ---- 23
 					 11 ---- 0	  VOIR IMAGE WIKIPEDIA */
 {
-  SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mÃ©moire
+  SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire
   InitBoard(gameState);
   gameState->bar[WHITE].nbDames=0;
   gameState->bar[WHITE].owner=NOBODY;
@@ -89,7 +89,7 @@ SGameState* InitState()              /*  12 ---- 23
   return gameState;
 }
 
-// rollDice prend en paramÃ¨tre le nombre de dÃ©s Ã  lancer et renvoie un pointeur vers un array de rÃ©sultats en unsigned int
+// rollDice prend en paramètre le nombre de dés à lancer et renvoie un pointeur vers un array de résultats en unsigned int
 unsigned int* rollDice(unsigned int* dice)
 {
     srand(time(NULL));     //
@@ -101,11 +101,23 @@ unsigned int* rollDice(unsigned int* dice)
 	return dice;
 }
 
-SMoves[2] emptyMoves(SMoves moves) //on vide les moves aprÃ¨s chaque mouvement effectuÃ© //attention si tableau de 4
+SMoves[2] emptyMoves(SMoves moves) //on vide les moves après chaque mouvement effectué //attention si tableau de 4
 {
 	moves[0].src_point=0;
 	moves[0].dest_point=0;
 	moves[1].src_point=0;
 	moves[1].dest_point=0;
 	return moves;
+}
+
+SMoves* emptyMoves(SMoves* moves)
+{
+    if (moves != NULL)
+    {
+        moves[0].src_point = 0;
+        moves[0].dest_point = 0;
+        moves[1].src_point = 0;
+        moves[1].dest_point = 0;
+    }
+    return moves;
 }
