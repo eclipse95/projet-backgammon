@@ -4,26 +4,18 @@
 #include "backgammon.h"
 #include <time.h>
 
-//srand(time(NULL)); //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
-// à deplacer, ne peut pas être utiliser ici    // relance à chaque EXECUTION
 int IsMatchOver(SGameState *gameState)
 {
-  if (gameState->bar[BLACK]==15)/*pions noirs sur last case = 15*/
-  { return BLACK; }
-  else if (gameState->bar[WHITE]==15)/*pions blancs sur last case = 15*/
-  { return WHITE; }
-  else
-  { return NOBODY; }
+if (gameState->bar[BLACK]==15) { return BLACK; } /*pions noirs sur last case = 15*/
+else if (gameState->bar[WHITE]==15) { return WHITE; } /*pions blancs sur last case = 15*/
+else { return NOBODY; }
 }
 
 int IsGameOver(SGameState *gameState)
 {
-  if (gameState->blackScore==5)
-  { return BLACK; }
-  else if (gameState->whiteScore==5)
-  { return WHITE; }
-  else
-  { return NOBODY; }
+	if (gameState->blackScore==5) { return BLACK; }
+	else if (gameState->whiteScore==5) { return WHITE; }
+	else { return NOBODY; }
 }
 
 
@@ -74,25 +66,24 @@ void InitBoard(SGameState* gameState)
 SGameState* InitState()              /*  12 ---- 23
 					 11 ---- 0	  VOIR IMAGE WIKIPEDIA */
 {
-  SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire
-  InitBoard(gameState);
-  gameState->bar[WHITE].nbDames=0;
-  gameState->bar[WHITE].owner=NOBODY;
-  gameState->bar[BLACK].nbDames=0;
-  gameState->bar[BLACK].owner=NOBODY;
-  gameState->out[WHITE].nbDames=0;
-  gameState->out[WHITE].owner=NOBODY;
-  gameState->out[BLACK].nbDames=0;
-  gameState->out[BLACK].owner=NOBODY;
-  gameState->whiteScore=0;
-  gameState->blackScore=0;
-  return gameState;
+	SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mÃ©moire
+	InitBoard(gameState);
+	gameState->bar[WHITE].nbDames=0;
+	gameState->bar[WHITE].owner=NOBODY;
+	gameState->bar[BLACK].nbDames=0;
+	gameState->bar[BLACK].owner=NOBODY;
+	gameState->out[WHITE].nbDames=0;
+	gameState->out[WHITE].owner=NOBODY;
+	gameState->out[BLACK].nbDames=0;
+	gameState->out[BLACK].owner=NOBODY;
+	gameState->whiteScore=0;
+	gameState->blackScore=0;
+	return gameState;
 }
 
-// rollDice prend en paramètre le nombre de dés à lancer et renvoie un pointeur vers un array de résultats en unsigned int
+// rollDice prend en paramÃ¨tre le nombre de dÃ©s Ã  lancer et renvoie un pointeur vers un array de rÃ©sultats en unsigned int
 unsigned int* rollDice(unsigned int* dice)
 {
-    srand(time(NULL));     //
 	int i;
 	for(i=0;i<2;i++)
 	{
@@ -101,23 +92,20 @@ unsigned int* rollDice(unsigned int* dice)
 	return dice;
 }
 
-SMoves[2] emptyMoves(SMoves moves) //on vide les moves après chaque mouvement effectué //attention si tableau de 4
+
+SMoves* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves aprÃ¨s chaque mouvement effectuÃ© 
 {
-	moves[0].src_point=0;
-	moves[0].dest_point=0;
-	moves[1].src_point=0;
-	moves[1].dest_point=0;
+	if (moves != NULL)
+	{
+		int i;
+	    	for (i=0; i<tailleMoves; i++)
+	        moves[i].src_point = 0;
+	        moves[i].dest_point = 0;
+	}
 	return moves;
 }
 
-SMoves* emptyMoves(SMoves* moves)
+SGameState* move(SMoves* moves, SGameState gameState, int tailleMoves)
 {
-    if (moves != NULL)
-    {
-        moves[0].src_point = 0;
-        moves[0].dest_point = 0;
-        moves[1].src_point = 0;
-        moves[1].dest_point = 0;
-    }
-    return moves;
+	return gameState; 
 }
