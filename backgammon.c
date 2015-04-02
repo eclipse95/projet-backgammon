@@ -18,6 +18,7 @@ void InitLibrary(char name[50])
 
 void StartMatch(const unsigned int target_score)
 {
+
 	printf("StartMatch\n");
 }
 
@@ -147,7 +148,7 @@ int main()
 						gameState->bar[BLACK]=15; //a voir si pb pour l'interface
 					}
 				}
-				
+
 				if (IsGameOver(gameState)==-1)
 				{
 					j1PlayTurn(&gameState,dices,moves,&nbMoves,3);

@@ -82,7 +82,7 @@ SGameState* InitState()              /*  12 ---- 23
 }
 
 // rollDice prend en paramètre le nombre de dés à lancer et renvoie un pointeur vers un array de résultats en unsigned int
-unsigned int* rollDice(unsigned int* dice)
+unsigned char* rollDice(unsigned char* dice)
 {
 	int i;
 	for(i=0;i<2;i++)
@@ -93,7 +93,7 @@ unsigned int* rollDice(unsigned int* dice)
 }
 
 
-SMoves* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves après chaque mouvement effectué 
+SMoves* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves après chaque mouvement effectué
 {
 	if (moves != NULL)
 	{
@@ -107,5 +107,5 @@ SMoves* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves après ch
 
 SGameState* move(SMoves* moves, SGameState gameState, int tailleMoves)
 {
-	return gameState; 
+	return gameState;
 }
