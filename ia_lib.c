@@ -10,6 +10,7 @@ void InitLibrary(char name[50])
 
 void StartMatch(const unsigned int target_score)
 {
+
 	printf("StartMatch\n");
 }
 
@@ -43,7 +44,7 @@ int TakeDouble(const SGameState * const gameState)
 void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], SMove moves[4], unsigned int *nbMove, unsigned int tries)
 {
 	printf("PlayTurn\n");
-	
+
 	//generate All Moves Possible
 
     	//get Score
@@ -54,15 +55,15 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 // Unofficial Functions
 SMove* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]){
 	SMove* allMovements;
-	
-	
-	
+
+
+
 	return allMovements;
 }
 
 int* getScore(SMove* allMovements){
 	int* scores;
-	
+
 	return scores;
 }
 
@@ -70,8 +71,8 @@ int getBest(int* scores){
 	int max = -1;
 	int id = -1;
 	int length = sizeof(scores)/sizeof(int);
-	
-	
+
+
 	extern Player player;
 
 void InitLibrary(char name[50]);
@@ -135,6 +136,9 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     for(ite=0 ; ite<nbMove ; ite++){
         moves[ite] = res->movements[ite];
     }
+
+    free(movements);
+    free(IAMove);
 }
 
 
@@ -294,6 +298,6 @@ Pile* combination4(SMove* array, int size){
 }
 
 
-	
+
 	return id;
 }

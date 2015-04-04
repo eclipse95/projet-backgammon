@@ -48,8 +48,8 @@ void pop(Pile* pile){
         Maillon* tmp = pile->last;
 
         pile->last = tmp->prec;
-
         pile->size--;
+        free(tmp);  //libère la mémoire
     }
 }
 
@@ -62,6 +62,19 @@ char* top(Pile* pile){
     }
 }
 
+void delete_maillon(Maillon maillon)
+{
+    free(maillon);
+}
+
+
+void delete_pile(Pile* pile)
+{
+    int i;
+    for(i = 0; i < pile.size; i++)
+        pop(pile);
+    free(pile);
+}
 
 int testPile(){
     int test = 0;
