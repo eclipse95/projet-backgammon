@@ -7,5 +7,6 @@
     * Gestion de la sécurité
     * Remplir le header avec les nouvelles fonctions
     * Faire des tests
+    * stocké SGameState ?
 * Section Interface
     * Remplir ce TODO
