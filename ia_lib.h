@@ -6,8 +6,8 @@ typedef enum {
 } Player;
 
 typedef struct {
-	Player owner;           /*!<  Joueur contrôlant la case */
-	unsigned int nbDames;   /*!<  Nombre de dames sur la case (non utilisé si `owner == NOBODY.`) */
+	Player owner;           /*!<  Joueur contrÃ´lant la case */
+	unsigned int nbDames;   /*!<  Nombre de dames sur la case (non utilisÃ© si `owner == NOBODY.`) */
 } Square;
 
 typedef struct {
@@ -16,10 +16,9 @@ typedef struct {
 	unsigned int out[2];
 	unsigned int whiteScore;    /*!< Score du joueur blanc */
 	unsigned int blackScore;    /*!< Score du joueur noir */
-	unsigned int turn;          /*!< Numéro du tour en cours (initialisé à 0) */
+	unsigned int turn;          /*!< NumÃ©ro du tour en cours (initialisÃ© Ã  0) */
 	unsigned int stake;			/*!< Mise courante de la partie */
 } SGameState;
-
 
 typedef struct
 {
@@ -27,13 +26,10 @@ typedef struct
 	unsigned int dest_point;
 } SMove;
 
-typedef struct IA IA;
-
-// custom struct ?
-struct IA
-{
-    SMove* movements;
-} ;
+typedef struct{
+    Pile* movements;
+    int size;
+}IA;
 
 void InitLibrary(char name[50]);
 
@@ -50,3 +46,6 @@ int DoubleStack(const SGameState * const gameState);
 int TakeDouble(const SGameState * const gameState);
 
 void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], SMove moves[4], unsigned int *nbMove, unsigned int tries);
+
+
+// TODO Nouvelles fonctions Ã  ajouter
