@@ -9,6 +9,7 @@ void InitLibrary(char name[50])
 {
 	printf("InitLibrary\n");
 	strcpy(name,"Yay");
+	init_stock_var(var_globale);
 }
 
 void StartMatch(const unsigned int target_score)
