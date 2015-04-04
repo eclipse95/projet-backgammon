@@ -48,4 +48,13 @@ int TakeDouble(const SGameState * const gameState);
 void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], SMove moves[4], unsigned int *nbMove, unsigned int tries);
 
 
+
+typedef struct
+{
+	int score;
+	Player me;
+} stock_var;
+
+
+void init_stock_var(stock_var* var);
 // TODO Nouvelles fonctions à ajouter

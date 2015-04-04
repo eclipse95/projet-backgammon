@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// variable globale
+stock_var var_globale;
+
 void InitLibrary(char name[50])
 {
 	printf("InitLibrary\n");
@@ -10,12 +13,13 @@ void InitLibrary(char name[50])
 
 void StartMatch(const unsigned int target_score)
 {
-
+    var_globale.score = target_score;
 	printf("StartMatch\n");
 }
 
 void StartGame(Player p)
 {
+    var_globale = p;
 	printf("StartGame\n");
 }
 
@@ -86,7 +90,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     // TODO
     //arraySize++
     //array = ...
-    
+
     if(arraySize == 0){
     	return NULL;
     }
@@ -227,4 +231,10 @@ Pile* combination4(SMove* array, int size){
         }
     }
     return moves;
+}
+
+void init_stock_var(stock_var* var)
+{
+    var->me = NOBODY;
+    var->score = 0;
 }
