@@ -62,7 +62,7 @@ char* top(Pile* pile){
     }
 }
 
-void delete_maillon(Maillon maillon)
+void delete_maillon(Maillon* maillon)
 {
     free(maillon);
 }

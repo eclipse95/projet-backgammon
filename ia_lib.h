@@ -27,6 +27,14 @@ typedef struct
 	unsigned int dest_point;
 } SMove;
 
+typedef struct IA IA;
+
+// custom struct ?
+struct IA
+{
+    SMove* movements;
+} ;
+
 void InitLibrary(char name[50]);
 
 void StartMatch(const unsigned int target_score);

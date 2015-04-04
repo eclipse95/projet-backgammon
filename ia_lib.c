@@ -144,8 +144,10 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
 
 // Unofficial Functions
+
+
 IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]){
-    IA* allMovements = (IA*)calloc(sizeof(IA));
+    IA* allMovements = (IA*)malloc(sizeof(IA));
     SMove* array;
     int arraySize;
 

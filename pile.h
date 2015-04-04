@@ -31,6 +31,10 @@ void pop(Pile*);
 
 IAMove* top(Pile*);
 
+// destructeurs
+void delete_maillon(Maillon*);
+
+void delete_pile(Pile*);
 
 int testPile();
 
