@@ -255,6 +255,7 @@ Pile* combination1(SMove* array, int size){
         tmp->nbMoves = 1;
         push(moves,tmp);
     }
+    return moves;
 }
 
 Pile* combination2(SMove* array, int size){
@@ -273,6 +274,7 @@ Pile* combination2(SMove* array, int size){
             push(moves,tmp);
         }
     }
+    return moves;
 }
 
 Pile* combination4(SMove* array, int size){
@@ -295,9 +297,9 @@ Pile* combination4(SMove* array, int size){
             push(moves,tmp);
         }
     }
+    return moves;
 }
 
 
-
-	return id;
-}
+//	return id;
+// }
