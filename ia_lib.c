@@ -41,82 +41,6 @@ int TakeDouble(const SGameState * const gameState)
 	return(0);
 }
 
-void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], SMove moves[4], unsigned int *nbMove, unsigned int tries)
-{
-	printf("PlayTurn\n");
-
-	//generate All Moves Possible
-
-    	//get Score
-
-    	//return first
-}
-
-// Unofficial Functions
-SMove* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]){
-	SMove* allMovements;
-
-
-
-	return allMovements;
-}
-
-int* getScore(SMove* allMovements){
-	int* scores;
-
-	return scores;
-}
-
-int getBest(int* scores){
-	int max = -1;
-	int id = -1;
-	int length = sizeof(scores)/sizeof(int);
-
-
-	extern Player player;
-
-void InitLibrary(char name[50]);
-//typedef void (*pfInitLibrary)(char[50]);
-{
-    strcpy(name,"Yay");
-}
-
-void StartMatch(const unsigned int target_score);
-//typedef void (*pfStartMatch)(const unsigned int);
-{
-    //VOID
-}
-
-void StartGame(Player p);
-//typedef void (*pfStartGame)(Player);
-{
-    player = p;
-}
-
-void EndGame();
-//typedef void (*pfEndGame)();
-{
-    //VOID
-}
-
-void EndMatch();
-//typedef void (*pfEndMatch)();
-{
-    //VOID
-}
-
-int DoubleStack(const SGameState* const gameState);
-//typedef int (*pfDoubleStack)(const SGameState * const);
-{
-    //VOID
-}
-
-int TakeDouble(const SGameState* const gameState);
-//typedef int (*pfTakeDouble)(const SGameState * const);
-{
-    //VOID
-}
-
 void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], SMove moves[4], unsigned int* nbMove, unsigned int tries)
 //typedef void (*pfPlayTurn)(const SGameState * const,  const unsigned char[2], SMove[4], unsigned int*, unsigned int);
 {
@@ -140,7 +64,6 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     free(movements);
     free(IAMove);
 }
-
 
 
 // Unofficial Functions
