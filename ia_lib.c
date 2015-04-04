@@ -70,9 +70,9 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
 
 IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]){
-    IA* allMovements = (IA*)malloc(sizeof(IA));
-    SMove* array;
-    int arraySize;
+    IA* allMovements = (IA*)calloc(1,sizeof(IA));
+    SMove* array;// Stocke la liste des mouvements possibles pendant ce tour (peut contenir des doublons)
+    int arraySize = 0;
 
     int nbMove;
     if(dices[0] == dices[1]){
@@ -82,10 +82,14 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         nbMove = 2;
     }
 
-    // Generate all movements
+    // Generate all possible movements in array
     // TODO
-
-
+    //arraySize++
+    //array = ...
+    
+    if(arraySize == 0){
+    	return NULL;
+    }
 
     // On récupère les combinaisons
     switch(nbMove){
@@ -159,7 +163,7 @@ IAMove* getBest(IA* allMovements){
     do{
         IAMove* move = tmp->suiv->movement;
 
-        if(move->score > maxScore){
+        if(move->score > maxScore){ // Possibilité d'utiliser une variable globale pour la tolérance niveau sécurité
             best = move;
         }
     }while(tmp->suiv != NULL);
@@ -224,7 +228,3 @@ Pile* combination4(SMove* array, int size){
     }
     return moves;
 }
-
-
-//	return id;
-// }
