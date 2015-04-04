@@ -33,7 +33,6 @@ typedef struct IA IA;
 struct IA
 {
     SMove* movements;
-
 } ;
 
 void InitLibrary(char name[50]);
