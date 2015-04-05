@@ -1,8 +1,9 @@
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "backgammon.h"
-#include <time.h>
+#include <math.h>
 
 int IsMatchOver(SGameState *gameState)
 {
@@ -68,8 +69,8 @@ SGameState* InitState()              /*  12 ---- 23
 {
 	SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire
 	InitBoard(gameState);
-	gameState->bar[WHITE].nbDames=0;
-	gameState->bar[WHITE].owner=NOBODY;
+	gameState->bar[WHITE].nbDames=0;	// bar n'a pas d'attribut
+	gameState->bar[WHITE].owner=NOBODY;	// bar n'a pas d'attribut
 	gameState->bar[BLACK].nbDames=0;
 	gameState->bar[BLACK].owner=NOBODY;
 	gameState->out[WHITE].nbDames=0;
@@ -200,13 +201,13 @@ int move(SMoves* moves, SGameState* gameState, int tailleMoves, int player)
 	    {
     		if (gameState->board[moves[i]->dest_point-1].owner != player && gameState->board[moves[i]->dest_point-1].nbDames==1) // si on peut prendre la case
     		{
-    			gameState->out[gameState->board[moves[i]->dest_point-1].owner]++; // ajout à la case destination
-    			gameState->board[moves[i]->dest_point-1].owner=player; // propriétaire de la case change
+    			gameState->out[gameState->board[moves[i].dest_point-1].owner]++; // ajout à la case destination
+    			gameState->board[moves[i].dest_point-1].owner=player; // propriétaire de la case change
     		}
     		else if (gameState->board[moves[i]->dest_point-1].owner == NOBODY && gameState->board[moves[i]->dest_point-1].nbDames==0) // 
     		{
-    		    gameState->board[moves[i]->dest_point-1].nbDames++;
-    			gameState->board[moves[i]->dest_point-1].owner=player; // prise d'une case libre
+    		    gameState->board[moves[i].dest_point-1].nbDames++;
+    			gameState->board[moves[i].dest_point-1].owner=player; // prise d'une case libre
     		}
     		else if (gameState->board[moves[i]->dest_point].owner == player) // on ajoute le pion à la case
     		{
