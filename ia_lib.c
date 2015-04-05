@@ -1,6 +1,7 @@
 #include "ia_lib.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // variable globale
 stock_var var_globale;
@@ -9,7 +10,7 @@ void InitLibrary(char name[50])
 {
 	printf("InitLibrary\n");
 	strcpy(name,"Yay");
-	init_stock_var(var_globale);
+	init_stock_var(&var_globale);
 }
 
 void StartMatch(const unsigned int target_score)
@@ -20,7 +21,7 @@ void StartMatch(const unsigned int target_score)
 
 void StartGame(Player p)
 {
-    var_globale = p;
+    var_globale.me = p;
 	printf("StartGame\n");
 }
 
@@ -63,11 +64,11 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     nbMove = res->nbMoves;
     int ite;
     for(ite=0 ; ite<nbMove ; ite++){
-        moves[ite] = res->movements[ite];
+        moves[ite] = res->movements[ite];        // Problème de type SMove* / Pile*
     }
 
     free(movements);
-    free(IAMove);
+    free(res);
 }
 
 
@@ -75,7 +76,7 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
 
 IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]){
-    IA* allMovements = (IA*)calloc(1,sizeof(IA));
+    IA* allMovements = (IA*) calloc(1,sizeof(IA));
     SMove* array;// Stocke la liste des mouvements possibles pendant ce tour (peut contenir des doublons)
     int arraySize = 0;
 
@@ -123,7 +124,7 @@ IA* getAllScores(const SGameState* const gameState, IA* allMovements){
     do{
         IAMove* moves = tmp->suiv->movement;
 
-        tmp->score = globalScore-getScore(gameState, moves);
+        tmp->score = globalScore - getScore(gameState, moves); //! Problème type int - IAMove*
     }while(tmp->suiv != NULL);
 
     return allMovements;
@@ -134,24 +135,24 @@ int getGlobalScore(const SGameState* const gameState){
 }
 
 IAScore* getScore(const SGameState* const gameState, IAMove* moves){
-    IAScore* score = calloc(1,sizeof(IAScore));
+    IAScore* score = calloc(1,sizeof(IAScore));         // IAScore non implémenté
     score->score = 0;
     score->notSafe = 0;
 
     int ite;
     for(ite = 0 ; ite < moves->nbMoves ; ite++){
-        SMove* tmp = moves->movements[ite];
+        SMove* tmp = moves->movements[ite];     // Problème de type SMove* / Pile*
 
-        if(gameState->board[tmp.src_point].owner == player){
+        if(gameState->board[tmp->src_point].owner == player){
             /*if(gameState->board[tmp.dest_point].nbDames == 2){
                 score->notSafe++;
             }*/ // Gestion de la sécurité
-            score->score += (tmp.dest_point - tmp.src_point);
+            score->score += (tmp->dest_point - tmp->src_point);
 
-            if(gameState->board[tmp.dest_point].owner != player &&
-               gameState->board[tmp.dest_point].owner != -1 &&
-               gameState->board[tmp.dest_point].nbDames == 1){
-                score->score += (24 - tmp.dest_point); // TODO
+            if(gameState->board[tmp->dest_point].owner != player &&
+               gameState->board[tmp->dest_point].owner != -1 &&
+               gameState->board[tmp->dest_point].nbDames == 1){
+                score->score += (24 - tmp->dest_point); // TODO
             }
         }
     }
@@ -212,7 +213,7 @@ Pile* combination2(SMove* array, int size){
 }
 
 Pile* combination4(SMove* array, int size){
-    Pile* moves = createPile();
+    Pile* moves = (Pile*) createPile();
     IAMove* tmp;
     int cpt,a,b,c,d = 0;
     for(cpt=1; cpt<size*size*size*size ; cpt++){

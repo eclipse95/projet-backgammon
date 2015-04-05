@@ -37,7 +37,7 @@ void push(Pile* pile, IAMove* movement){
     }
     else{
         pile->last->suiv = &tmp;
-        tmp.prec = pile->last;
+        tmp->prec = pile->last;
         pile->last = &tmp;
     }
     pile->size++;
@@ -53,7 +53,7 @@ void pop(Pile* pile){
     }
 }
 
-IAMove* top(Pile* pile){
+IAMove* top(Pile* pile){            // problème retour pile* / IAMove*
     if(!estVide(pile)){
         return pile->last->movement;
     }
@@ -71,14 +71,14 @@ void delete_maillon(Maillon* maillon)
 void delete_pile(Pile* pile)
 {
     int i;
-    for(i = 0; i < pile.size; i++)
+    for(i = 0; i < pile->size; i++)
         pop(pile);
     free(pile);
 }
 
 int testPile(){
     int test = 0;
-    Pile pile = createPile();
+    Pile* pile = createPile();
     if(!estVide(&pile)){
         printf("ERROR - echec dans la creation de la pile\n");
         test = 1;
@@ -93,7 +93,7 @@ int testPile(){
         test = 1;
     }
 
-    printf("%d\n",pile.size);
+    printf("%d\n",pile->size);
 
     pop(&pile);
 

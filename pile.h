@@ -29,7 +29,7 @@ void push(Pile*, IAMove*);
 
 void pop(Pile*);
 
-IAMove* top(Pile*);
+IAMove* top(Pile*); // problème retour pile* / IAMove*
 
 // destructeurs
 void delete_maillon(Maillon*);
