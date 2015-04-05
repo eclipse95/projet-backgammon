@@ -65,8 +65,8 @@ int main()
 	unsigned char dices[2]; //pb usigned char unsigned int ?
 	int player, tailleMoves, startingPlayer;
 	unsigned int has_asked_double[2];
-	int has_asked_double[BLACK]=0;
-	int has_asked_double[WHITE]=0;
+	has_asked_double[BLACK]=0;
+	has_asked_double[WHITE]=0;
 
 	while (IsMatchOver(&gameState)!=-1)
 	{
