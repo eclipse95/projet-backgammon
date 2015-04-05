@@ -6,9 +6,9 @@
 
 int IsMatchOver(SGameState *gameState)
 {
-if (gameState->bar[BLACK]==15) { return BLACK; } /*pions noirs sur last case = 15*/
-else if (gameState->bar[WHITE]==15) { return WHITE; } /*pions blancs sur last case = 15*/
-else { return NOBODY; }
+	if (gameState->bar[BLACK]==15) { return BLACK; } /*pions noirs sur last case = 15*/
+	else if (gameState->bar[WHITE]==15) { return WHITE; } /*pions blancs sur last case = 15*/
+	else { return NOBODY; }
 }
 
 int IsGameOver(SGameState *gameState)
@@ -99,13 +99,31 @@ SMoves* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves après ch
 	{
 		int i;
 	    	for (i=0; i<tailleMoves; i++)
-	        moves[i].src_point = 0;
-	        moves[i].dest_point = 0;
+	    	{
+	        	moves[i]->src_point = 0;
+	        	moves[i]->dest_point = 0;
+	    	}
 	}
 	return moves;
 }
 
-SGameState* move(SMoves* moves, SGameState gameState, int tailleMoves)
+SGameState* move(SMoves* moves, SGameState* gameState, int tailleMoves)
 {
+	int i;
+	for (i=0; i<tailleMoves; i++)
+	{
+		gameState->board[moves[i]->src_point].nbDames--;
+		if (gameState->board[moves[i]->src_point].owner != gameState->board[moves[i]->dest_point].owner && gameState->board[moves[i]->dest_point].nbDames<2)
+		{
+			gameState->board[moves[i]->dest_point].nbDames=1;
+			gameState->board[moves[i]->dest_point].owner=gameState->board[moves[i]->src_point].owner;
+			gameState->out[gameState->board[moves[i]->src_point].owner]++;
+		}
+		else if (gameState->board[moves[i]->dest_point].nbDames==0 || gameState->board[moves[i]->dest_point].owner == gameState->board[moves[i]->src_point].owner)
+		{
+			gameState->board[moves[i]->dest_point].nbDames++;
+		}
+		else { printf("Problème de vérification : mouvement impossible !\n"); }
+	}
 	return gameState;
 }
