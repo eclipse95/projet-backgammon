@@ -4,6 +4,11 @@
 typedef struct Maillon Maillon;
 
 // IAMove
+typedef struct				// <!> A modifier // TODO
+{
+    int* movements;		// Changer le type
+    int nbMoves;
+} IAMove;
 
 struct Maillon{
     Maillon* prec;

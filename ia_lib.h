@@ -47,16 +47,13 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 
 // custom struct and functions
-typedef struct				// <!> A modifier // TODO
-{
-	Pile* movements;		// Changer le type
-	int nbMoves;
-} IAMove;
+
 
 
 typedef struct // TODO
 {
-
+	int score;
+	int notSafe;
 } IAScore ;
 
 typedef struct{

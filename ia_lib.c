@@ -61,10 +61,10 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     //return first
     res = getBest(movements);
 
-    nbMove = res->nbMoves;
+    nbMove = (unsigned int*) res->nbMoves;      // probleme d'affectation nbMove est paramètre
     int ite;
     for(ite=0 ; ite<nbMove ; ite++){
-        moves[ite] = res->movements[ite];        // Problème de type SMove* / Pile*
+        moves[ite] = res->movements[ite];        // Problème de type SMove* / ? (cf struct IAMove)
     }
 
     free(movements);
@@ -122,7 +122,7 @@ IA* getAllScores(const SGameState* const gameState, IA* allMovements){
     Maillon* tmp = allMovements->movements->first;
 
     do{
-        IAMove* moves = tmp->suiv->movement;
+        IAMove* moves = (IAMove*) tmp->suiv->movement;
 
         tmp->score = globalScore - getScore(gameState, moves); //! Problème type int - IAMove*
     }while(tmp->suiv != NULL);
@@ -143,13 +143,13 @@ IAScore* getScore(const SGameState* const gameState, IAMove* moves){
     for(ite = 0 ; ite < moves->nbMoves ; ite++){
         SMove* tmp = moves->movements[ite];     // Problème de type SMove* / Pile*
 
-        if(gameState->board[tmp->src_point].owner == player){
+        if(gameState->board[tmp->src_point].owner == player){       // player non défini
             /*if(gameState->board[tmp.dest_point].nbDames == 2){
                 score->notSafe++;
             }*/ // Gestion de la sécurité
             score->score += (tmp->dest_point - tmp->src_point);
 
-            if(gameState->board[tmp->dest_point].owner != player &&
+            if(gameState->board[tmp->dest_point].owner != player &&      // player non défini
                gameState->board[tmp->dest_point].owner != -1 &&
                gameState->board[tmp->dest_point].nbDames == 1){
                 score->score += (24 - tmp->dest_point); // TODO
@@ -203,7 +203,7 @@ Pile* combination2(SMove* array, int size){
         if(b>a){
             tmp = calloc(1,sizeof(IAMove));
             tmp->movements = calloc(2,sizeof(SMove));
-            tmp->movements[0] = array[a];       //probleme type SMove / Pile
+            tmp->movements[0] = array[a];       //probleme type SMove / ?
             tmp->movements[1] = array[b];       //
             tmp->nbMoves = 2;
             push(moves,tmp);
@@ -224,7 +224,7 @@ Pile* combination4(SMove* array, int size){
         if(d>c && c>b && b>a){
             tmp = calloc(1,sizeof(IAMove));
             tmp->movements = calloc(4,sizeof(SMove));
-            tmp->movements[0] = array[a];       // probleme type SMove / Pile
+            tmp->movements[0] = array[a];       // probleme type SMove / ?
             tmp->movements[1] = array[b];       //
             tmp->movements[2] = array[c];       //
             tmp->movements[3] = array[d];       //

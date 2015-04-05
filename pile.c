@@ -32,13 +32,13 @@ void push(Pile* pile, IAMove* movement){
     tmp->movement = movement;
 
     if(estVide(pile)){
-        pile->first = &tmp;
-        pile->last = &tmp;
+        pile->first = tmp;
+        pile->last = tmp;
     }
     else{
-        pile->last->suiv = &tmp;
+        pile->last->suiv = tmp;
         tmp->prec = pile->last;
-        pile->last = &tmp;
+        pile->last = tmp;
     }
     pile->size++;
 }
@@ -79,23 +79,23 @@ void delete_pile(Pile* pile)
 int testPile(){
     int test = 0;
     Pile* pile = createPile();
-    if(!estVide(&pile)){
+    if(!estVide(pile)){
         printf("ERROR - echec dans la creation de la pile\n");
         test = 1;
     }
 
-    push(&pile,"test1");
+    push(pile,"test1");     // ne peut pas marcher -> push(Pile*,IAMove*)
 
-    push(&pile,"test2");
+    push(pile,"test2");
 
-    if(estVide(&pile)){
+    if(estVide(pile)){
         printf("ERROR - echec de la fonction push\n");
         test = 1;
     }
 
     printf("%d\n",pile->size);
 
-    pop(&pile);
+    pop(pile);
 
 /*
     push(&pile,"test2");
