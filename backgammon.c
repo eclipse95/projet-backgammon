@@ -99,11 +99,11 @@ int main()
 						if (j2TakeDouble(&gameState)!=0)
 						{
 							gameState->stake*=2;
-							has_asked_double[BLACK]=1;
+							has_asked_double[player]=1;
 						}
 						else
 						{
-							gameState->bar[BLACK]=15; //a voir si pb pour l'interface
+							gameState->bar[player]=15; //fin game // a voir si pb pour l'interface
 						}
 					}
 			  	}
@@ -126,11 +126,11 @@ int main()
 						if (j1TakeDouble(&gameState)!=0)
 						{
 							gameState->stake*=2;
-							has_asked_double[WHITE]=1;
+							has_asked_double[player]=1;
 						}
 						else
 						{
-							gameState->bar[WHITE]=15; //a voir si pb pour l'interface
+							gameState->bar[player]=15; //fin game //a voir si pb pour l'interface
 						}
 					}
 				}
