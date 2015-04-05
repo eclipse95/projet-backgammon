@@ -5,9 +5,6 @@
 #include "arbitre.h"
 #include "backgammon.h"
 
-//srand((unsigned) time(&t)); //permet de créer une nouvelle seed radom (donc de "relancer" le tableau à chaque compilation)
-
-
 // Dans la librairie /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
 
 void InitLibrary(char name[50])
@@ -63,7 +60,7 @@ int main()
 	srand(time(NULL));    //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
 	void* libj1, libj2;
 	// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici) -->> mis par le prof
-	SGameState gameState=InitState();
+	SGameState* gameState=InitState();
 	SMove moves[4];
 
 	//// Chargement des bibliothèques et de leurs fonctions
@@ -116,89 +113,111 @@ int main()
 	//unsigned int *roll=malloc(sizeof(unsigned int)*2);//ptet mais autant garder c'est pareil
 	unsigned int nbMoves;
 	unsigned char dices[2];
-	int player, tailleMoves;
+	int player, tailleMoves, startingPlayer;
+	unsigned int has_asked_double[2];
+	has_asked_double[BLACK]=0;
+	has_asked_double[WHITE]=0;
 
 	while (IsMatchOver(&gameState)!=-1)
 	{
 		j1StartGame(BLACK);
 		j2StartGame(WHITE);
 		player=NOBODY;
-		InitBoard(gameState);
+		InitBoard(&gameState);
 		while (player==NOBODY) //qui commence toujours déterminé par les dés ?
 		{
 			dices=rollDice(&dices);
 			if(dices[BLACK] > dices[WHITE]) { player=BLACK; }else{ player=WHITE; }
 		}
-		while (IsGameOver(gameState)!=-1)
+		
+		startingPlayer=player; //savoir qui a commencé permet de compter les turns
+		
+		while (IsGameOver(&gameState)!=-1)
 		{
 			dices=rollDice(&dices);
 			if (dices[0]==dices[1]) { tailleMoves=4; }
 			else {tailleMoves=2;}
 			if (player==BLACK)
 			{
-			  	//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
-				if (j1DoubleStack(&gameState)!=0)
-				{
-					if (j2TakeDouble(&gameState)!=0)
+			  	if (has_asked_double[player]==0)
+			  	{//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
+					if (j1DoubleStack(&gameState)!=0)
 					{
-						gameState->stake*=2;
+						if (j2TakeDouble(&gameState)!=0)
+						{
+							gameState->stake*=2;
+							has_asked_double[BLACK]=1;
+						}
+						else
+						{
+							gameState->bar[BLACK]=15; //a voir si pb pour l'interface
+						}
 					}
-					else
-					{
-						gameState->bar[BLACK]=15; //a voir si pb pour l'interface
-					}
-				}
+			  	}
 
-				if (IsGameOver(gameState)==-1)
+				if (IsGameOver(&gameState)==-1)
 				{
 					j1PlayTurn(&gameState,dices,moves,&nbMoves,3);
 					//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
-					move(moves, &gameState, tailleMoves);
-					emptyMoves(moves, tailleMoves);
+					move(&moves, &gameState, tailleMoves);
+					emptyMoves(&moves, tailleMoves);
 					player=WHITE;
 				}
 			}
 			else if (player==WHITE)
 			{
-			//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
-				if (j2DoubleStack(&gameState)!=0)
-				{
-					if (j1TakeDouble(&gameState)!=0)
+				if (has_asked_double[player]==0)
+				{//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
+					if (j2DoubleStack(&gameState)!=0)
 					{
-						gameState->stake*=2;
-					}
-					else
-					{
-						gameState->bar[WHITE]=15; //a voir si pb pour l'interface
+						if (j1TakeDouble(&gameState)!=0)
+						{
+							gameState->stake*=2;
+							has_asked_double[WHITE]=1;
+						}
+						else
+						{
+							gameState->bar[WHITE]=15; //a voir si pb pour l'interface
+						}
 					}
 				}
-				if (IsGameOver(gameState)==-1)
+				
+				if (IsGameOver(&gameState)==-1)
 				{
 					j2PlayTurn(&gameState,dices,moves,&nbMoves,3);
 					//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
 					move(moves, &gameState, tailleMoves);
-					emptyMoves(moves, tailleMoves);
+					emptyMoves(&moves, tailleMoves);
 					player=BLACK;
 				}
-			  }
+				
+				if (player==startingPlayer)
+				{
+					gameState->turn++;
+				}
 			}
-			if (IsGameOver(gameState)==BLACK)
+		}
+			
+			if (IsGameOver(&gameState)==BLACK)
 			{
 				gameState->blackScore+=gameState->stake;
 				printf("Les Noirs gagnent cette manche et %i points !", gameState->stake);
 			}
-			else if (IsGameOver(gameState)==WHITE)
+			else if (IsGameOver(&gameState)==WHITE)
 			{
 				gameState->whiteScore+=gameState->stake;
 				printf("Les Blancs gagnent cette manche et %i points !\n", gameState->stake);
 			}
-			else { return -1; } //gestion d'erreur plus précise
+			else { return -1; } //gestion d'erreur plus précise ?
+			
 			j1EndGame();
 			j2EndGame();
 	}
-	if (IsMatchOver(gameState)==BLACK) { printf("Les Noirs gagnent la partie !"); }
-	else if (IsMatchOver(gameState)==WHITE) { printf("Les Blancs gagnent la partie !"); }
+	
+	if (IsMatchOver(&gameState)==BLACK) { printf("Les Noirs gagnent la partie !"); }
+	else if (IsMatchOver(&gameState)==WHITE) { printf("Les Blancs gagnent la partie !"); }
 	else { return -1; }
+	
 	j1EndMatch();
 	j2EndMatch();
 
