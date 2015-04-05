@@ -6,17 +6,17 @@
  * Les nombres sont là pour faciliter les tests.
  */
 typedef enum {
-    BLACK = 0,
-    NOBODY = -1,
-    WHITE = 1
+	BLACK = 0,
+	NOBODY = -1,
+	WHITE = 1
 } Player;
 
 /**
  * @brief Définit le contenu d'une case de jeu.
  */
 typedef struct {
-    Player owner;           /*!<  Joueur contrôlant la case */
-    unsigned int nbDames;   /*!<  Nombre de dames sur la case (non utilisé si `owner == NOBODY.`) */
+	Player owner;           /*!<  Joueur contrôlant la case */
+	unsigned int nbDames;   /*!<  Nombre de dames sur la case (non utilisé si `owner == NOBODY.`) */
 } Square;
 
 
@@ -27,12 +27,12 @@ typedef struct {
  * faciles.
  */
 typedef struct {
-    Square board[24];           /*!< Les 24 cases du tableau, en partant du bord blanc. */
+	Square board[24];           /*!< Les 24 cases du tableau, en partant du bord blanc. */
 	unsigned int bar[2];
 	unsigned int out[2];
-    unsigned int whiteScore;    /*!< Score du joueur blanc */
-    unsigned int blackScore;    /*!< Score du joueur noir */
-    unsigned int turn;          /*!< Numéro du tour en cours (initialisé à 0) */
+	unsigned int whiteScore;    /*!< Score du joueur blanc */
+	unsigned int blackScore;    /*!< Score du joueur noir */
+	unsigned int turn;          /*!< Numéro du tour en cours (initialisé à 0) */
 	unsigned int stake;			/*!< Mise courante de la partie */
 } SGameState;
 

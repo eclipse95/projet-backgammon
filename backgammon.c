@@ -2,12 +2,13 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-//#include "arbitre.h"
+#include "arbitre.h"
 #include "backgammon.h"
 
-//////////////////////////////////////////////////////////
-// Dans la librairie
-//
+//srand((unsigned) time(&t)); //permet de créer une nouvelle seed radom (donc de "relancer" le tableau à chaque compilation)
+
+
+// Dans la librairie /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
 
 void InitLibrary(char name[50])
 {
@@ -17,6 +18,7 @@ void InitLibrary(char name[50])
 
 void StartMatch(const unsigned int target_score)
 {
+
 	printf("StartMatch\n");
 }
 
@@ -35,13 +37,13 @@ void EndMatch()
 	printf("EndMatch\n");
 }
 
-int DoubleStack(const SGameState * const gameState)
+int DoubleStack(const SGameState * const gameState) //demande videau // pb : stocker qui l'a demandé pour pas lui redemander
 {
 	printf("DoubleStack\n");
 	return(0);
 }
 
-int TakeDouble(const SGameState * const gameState)
+int TakeDouble(const SGameState * const gameState) //réponse
 {
 	printf("TakeDouble\n");
 	return(0);
@@ -52,94 +54,157 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 	printf("PlayTurn\n");
 }
 
-// rollDice prend en paramètre le nombre de dés à lancer et renvoie un pointeur vers un array de résultats en unsigned int
 
-unsigned int *rollDice(int nbDice)
-{
-	unsigned int *roll=malloc(sizeof(unsigned int)*nbDice);
-	int i;
-	for(i=0;i<nbDice;i++)
-	{
-		roll[i]=(rand() % 5)+1;
-	}
-	return roll;
-}
+// Dans l'exécutable  /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
 
-
-//////////////////////////////////////////////////////////
-// Dans l'exécutable
-//
-
-//void deroulement_du_jeu()	
+//void deroulement_du_jeu()  --->>> mis par le prof
 int main()
 {
-	//*****// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici)
-	SGameState gameState;
+	srand(time(NULL));    //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
+	void* libj1, libj2;
+	// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici) -->> mis par le prof
+	SGameState gameState=InitState();
 	SMove moves[4];
 
-	//*****// à faire pour chaque joueur
-	
-	// Chargement de la librairie (chargement des pointeurs de fonctions des fonctions décrites dans "backgammon.h")
-	// -> à ermplacer par votre code de chargement
+	//// Chargement des bibliothèques et de leurs fonctions
+	//Joueur 1
+	if ((libj1=dlopen("libj1.so",RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j1InitLibrary=InitLibrary;
+	if ((j1InitLibrary=(pfInitLibrary)dlsym(libj1,"InitLibrary"))==NULL) { return(-1); }
 	pfStartMatch j1StartMatch=StartMatch;
+	if ((j1StartMatch=(pfStartMatch)dlsym(libj1,"StartMatch"))==NULL) { return(-1); }
 	pfStartGame j1StartGame=StartGame;
+	if ((j1StartGame=(pfStartGame)dlsym(libj1,"StartGame"))==NULL) { return(-1); }
 	pfEndGame j1EndGame=EndGame;
+	if ((j1EndGame=(pfEndGame)dlsym(libj1,"EndGame"))==NULL) { return(-1); }
 	pfEndMatch j1EndMatch=EndMatch;
+	if ((j1EndMatch=(pfEndMatch)dlsym(libj1,"EndMatch"))==NULL) { return(-1); }
 	pfDoubleStack j1DoubleStack=DoubleStack;
+	if ((j1DoubleStack=(pfDoubleStack)dlsym(libj1,"DoubleStack"))==NULL) { return(-1); }
 	pfTakeDouble j1TakeDouble=TakeDouble;
+	if ((j1TakeDouble=(pfTakeDouble)dlsym(libj1,"TakeDouble"))==NULL) { return(-1); }
 	pfPlayTurn j1PlayTurn=PlayTurn;
-	
+	if ((j1PlayTurn=(pfPlayTurn)dlsym(libj1,"PlayTurn"))==NULL) { return(-1); }
+
+	//Joueur 2
+	if ((libj2=dlopen("libj2.so",RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j2InitLibrary=InitLibrary;
+	if ((j2InitLibrary=(pfInitLibrary)dlsym(libj2,"InitLibrary"))==NULL) { return(-1); }
 	pfStartMatch j2StartMatch=StartMatch;
+	if ((j2StartMatch=(pfStartMatch)dlsym(libj2,"StartMatch"))==NULL) { return(-1); }
 	pfStartGame j2StartGame=StartGame;
+	if ((j2StartGame=(pfStartGame)dlsym(libj2,"StartGame"))==NULL) { return(-1); }
 	pfEndGame j2EndGame=EndGame;
+	if ((j2EndGame=(pfEndGame)dlsym(libj2,"EndGame"))==NULL) { return(-1); }
 	pfEndMatch j2EndMatch=EndMatch;
+	if ((j2EndMatch=(pfEndMatch)dlsym(libj2,"EndMatch"))==NULL) { return(-1); }
 	pfDoubleStack j2DoubleStack=DoubleStack;
+	if ((j2DoubleStack=(pfDoubleStack)dlsym(libj2,"DoubleStack"))==NULL) { return(-1); }
 	pfTakeDouble j2TakeDouble=TakeDouble;
+	if ((j2TakeDouble=(pfTakeDouble)dlsym(libj2,"TakeDouble"))==NULL) { return(-1); }
 	pfPlayTurn j2PlayTurn=PlayTurn;
+	if ((j2PlayTurn=(pfPlayTurn)dlsym(libj2,"PlayTurn"))==NULL) { return(-1); }
 
-	// Initialisation de la librairie
-	char name[50];
-	j1InitLibrary(name);
+	//// Initialisation de la bibliothèque de chaque joueur du match
+	char name1[50];
+	char name2[50];
+	j1InitLibrary(name1);
+	j2InitLibrary(name2);
 	j1StartMatch(5);
+	j2StartMatch(5);
 
-	unsigned int *diceResult;
+	//unsigned int *roll=malloc(sizeof(unsigned int)*2);//ptet mais autant garder c'est pareil
 	unsigned int nbMoves;
 	unsigned char dices[2];
-	int player;
+	int player, tailleMoves;
 
-	while (IsMatchOver(&gameState)!=1)
+	while (IsMatchOver(&gameState)!=-1)
 	{
 		j1StartGame(BLACK);
 		j2StartGame(WHITE);
-		//int player = plus gros roll
-		diceResult=rollDice(2);
-		if(*diceResult > *(diceResult+1)) { player=1; }else{ player=2; }
-		while (IsGameOver(gameState)!=1)
+		player=NOBODY;
+		InitBoard(gameState);
+		while (player==NOBODY) //qui commence toujours déterminé par les dés ?
 		{
-		  if (player==1) 
-		  {
-			if (j1DoubleStack(&gameState))
-				j2TakeDouble(&gameState);
-			j1PlayTurn(&gameState,dices,moves,&nbMoves,3);
-			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
-			player=2;
-		  }
-		  else if (player==2)
-		  {
-			if (j2DoubleStack(&gameState))
-				j1TakeDouble(&gameState);
-			j2PlayTurn(&gameState,dices,moves,&nbMoves,3);
-			//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
-			player=1;
-		  }
+			dices=rollDice(&dices);
+			if(dices[BLACK] > dices[WHITE]) { player=BLACK; }else{ player=WHITE; }
 		}
-		j1EndGame();
-		j2EndGame();
+		while (IsGameOver(gameState)!=-1)
+		{
+			dices=rollDice(&dices);
+			if (dices[0]==dices[1]) { tailleMoves=4; }
+			else {tailleMoves=2;}
+			if (player==BLACK)
+			{
+			  	//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
+				if (j1DoubleStack(&gameState)!=0)
+				{
+					if (j2TakeDouble(&gameState)!=0)
+					{
+						gameState->stake*=2;
+					}
+					else
+					{
+						gameState->bar[BLACK]=15; //a voir si pb pour l'interface
+					}
+				}
+
+				if (IsGameOver(gameState)==-1)
+				{
+					j1PlayTurn(&gameState,dices,moves,&nbMoves,3);
+					//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
+					move(moves, &gameState, tailleMoves);
+					emptyMoves(moves, tailleMoves);
+					player=WHITE;
+				}
+			}
+			else if (player==WHITE)
+			{
+			//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
+				if (j2DoubleStack(&gameState)!=0)
+				{
+					if (j1TakeDouble(&gameState)!=0)
+					{
+						gameState->stake*=2;
+					}
+					else
+					{
+						gameState->bar[WHITE]=15; //a voir si pb pour l'interface
+					}
+				}
+				if (IsGameOver(gameState)==-1)
+				{
+					j2PlayTurn(&gameState,dices,moves,&nbMoves,3);
+					//verification pas triche : peut passer que si peut pas jouer, et verif cases envoyées apatiennent à cases possibles
+					move(moves, &gameState, tailleMoves);
+					emptyMoves(moves, tailleMoves);
+					player=BLACK;
+				}
+			  }
+			}
+			if (IsGameOver(gameState)==BLACK)
+			{
+				gameState->blackScore+=gameState->stake;
+				printf("Les Noirs gagnent cette manche et %i points !", gameState->stake);
+			}
+			else if (IsGameOver(gameState)==WHITE)
+			{
+				gameState->whiteScore+=gameState->stake;
+				printf("Les Blancs gagnent cette manche et %i points !\n", gameState->stake);
+			}
+			else { return -1; } //gestion d'erreur plus précise
+			j1EndGame();
+			j2EndGame();
 	}
+	if (IsMatchOver(gameState)==BLACK) { printf("Les Noirs gagnent la partie !"); }
+	else if (IsMatchOver(gameState)==WHITE) { printf("Les Blancs gagnent la partie !"); }
+	else { return -1; }
 	j1EndMatch();
 	j2EndMatch();
 
+	dlclose(libj1); //libération des bibliothèques
+	dlclose(libj2);
+	free(roll);
+	free(gameState);
 	return(0);
 }
