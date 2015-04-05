@@ -115,9 +115,9 @@ SGameState* move(SMoves* moves, SGameState* gameState, int tailleMoves)
 		gameState->board[moves[i]->src_point].nbDames--;
 		if (gameState->board[moves[i]->src_point].owner != gameState->board[moves[i]->dest_point].owner && gameState->board[moves[i]->dest_point].nbDames<2)
 		{
+			gameState->out[gameState->board[moves[i]->dest_point].owner]++;
 			gameState->board[moves[i]->dest_point].nbDames=1;
 			gameState->board[moves[i]->dest_point].owner=gameState->board[moves[i]->src_point].owner;
-			gameState->out[gameState->board[moves[i]->src_point].owner]++;
 		}
 		else if (gameState->board[moves[i]->dest_point].nbDames==0 || gameState->board[moves[i]->dest_point].owner == gameState->board[moves[i]->src_point].owner)
 		{
