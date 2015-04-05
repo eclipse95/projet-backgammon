@@ -53,7 +53,7 @@ void pop(Pile* pile){
     }
 }
 
-char* top(Pile* pile){
+IAMove* top(Pile* pile){
     if(!estVide(pile)){
         return pile->last->movement;
     }

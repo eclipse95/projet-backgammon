@@ -26,10 +26,6 @@ typedef struct
 	unsigned int dest_point;
 } SMove;
 
-typedef struct{
-    Pile* movements;
-    int size;
-}IA;
 
 void InitLibrary(char name[50]);
 
@@ -49,6 +45,13 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 
 
+// custom struct and functions
+
+typedef struct{
+    Pile* movements;
+    int size;
+}IA;
+
 typedef struct
 {
 	int score;
@@ -57,4 +60,24 @@ typedef struct
 
 
 void init_stock_var(stock_var* var);
+
+IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]);
+
+IA* getAllScores(const SGameState* const gameState, IA* allMovements);
+
+int getGlobalScore(const SGameState* const gameState); // not finished
+
+IAScore* getScore(const SGameState* const gameState, IAMove* moves);
+
+IAMove* getBest(IA* allMovements);
+
+Pile* combination1(SMove* array, int size);
+
+Pile* combination2(SMove* array, int size);
+
+Pile* combination4(SMove* array, int size);
+
+
+
 // TODO Nouvelles fonctions à ajouter
+// TODO Implémenter struct IAScore et IAMove
