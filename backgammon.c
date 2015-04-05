@@ -5,55 +5,6 @@
 #include "arbitre.h"
 #include "backgammon.h"
 
-// Dans la librairie /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
-
-void InitLibrary(char name[50])
-{
-	printf("InitLibrary\n");
-	strcpy(name,"Fabien Picarougne");
-}
-
-void StartMatch(const unsigned int target_score)
-{
-
-	printf("StartMatch\n");
-}
-
-void StartGame(Player p)
-{
-	printf("StartGame\n");
-}
-
-void EndGame()
-{
-	printf("EndGame\n");
-}
-
-void EndMatch()
-{
-	printf("EndMatch\n");
-}
-
-int DoubleStack(const SGameState * const gameState) //demande videau // pb : stocker qui l'a demandé pour pas lui redemander
-{
-	printf("DoubleStack\n");
-	return(0);
-}
-
-int TakeDouble(const SGameState * const gameState) //réponse
-{
-	printf("TakeDouble\n");
-	return(0);
-}
-
-void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], SMove moves[4], unsigned int *nbMove, unsigned int tries)
-{
-	printf("PlayTurn\n");
-}
-
-
-// Dans l'exécutable  /////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////////////////////////////////////////
-
 //void deroulement_du_jeu()  --->>> mis par le prof
 int main()
 {
@@ -110,9 +61,8 @@ int main()
 	j1StartMatch(5);
 	j2StartMatch(5);
 
-	//unsigned int *roll=malloc(sizeof(unsigned int)*2);//ptet mais autant garder c'est pareil
 	unsigned int nbMoves;
-	unsigned char dices[2];
+	unsigned char dices[2]; //pb usigned char unsigned int ?
 	int player, tailleMoves, startingPlayer;
 	unsigned int has_asked_double[2];
 	has_asked_double[BLACK]=0;
@@ -134,13 +84,16 @@ int main()
 		
 		while (IsGameOver(&gameState)!=-1)
 		{
+			if (player==startingPlayer){ gameState->turn++;	}
+			
 			dices=rollDice(&dices);
 			if (dices[0]==dices[1]) { tailleMoves=4; }
 			else {tailleMoves=2;}
+			
 			if (player==BLACK)
 			{
 			  	if (has_asked_double[player]==0)
-			  	{//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
+			  	{//un joueur dont le DoubleStack a été accepté ne peut pas le redemander ensuite
 					if (j1DoubleStack(&gameState)!=0)
 					{
 						if (j2TakeDouble(&gameState)!=0)
@@ -167,7 +120,7 @@ int main()
 			else if (player==WHITE)
 			{
 				if (has_asked_double[player]==0)
-				{//if le gars a déja lancé un dble stack qui a été accepté, on rappelle pas la fonction
+				{//un joueur dont le DoubleStack a été accepté ne peut pas le redemander ensuite
 					if (j2DoubleStack(&gameState)!=0)
 					{
 						if (j1TakeDouble(&gameState)!=0)
@@ -189,11 +142,6 @@ int main()
 					move(moves, &gameState, tailleMoves);
 					emptyMoves(&moves, tailleMoves);
 					player=BLACK;
-				}
-				
-				if (player==startingPlayer)
-				{
-					gameState->turn++;
 				}
 			}
 		}
