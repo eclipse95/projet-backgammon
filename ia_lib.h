@@ -47,12 +47,17 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 
 // custom struct and functions
-typedef struct				// <!> A modifier
+typedef struct				// <!> A modifier // TODO
 {
 	Pile* movements;		// Changer le type
 	int nbMoves;
 } IAMove;
 
+
+typedef struct // TODO
+{
+
+} IAScore ;
 
 typedef struct{
     Pile* movements;
@@ -74,7 +79,7 @@ IA* getAllScores(const SGameState* const gameState, IA* allMovements);
 
 int getGlobalScore(const SGameState* const gameState); // not finished
 
-IAScore* getScore(const SGameState* const gameState, IAMove* moves);
+IAScore* getScore(const SGameState* const gameState, IAMove* moves); // probleme type
 
 IAMove* getBest(IA* allMovements);
 

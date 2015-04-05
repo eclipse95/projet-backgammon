@@ -186,7 +186,7 @@ Pile* combination1(SMove* array, int size){
     for(cpt=1; cpt<size ; cpt++){
         tmp = calloc(1,sizeof(IAMove));
         tmp->movements = calloc(1,sizeof(SMove));
-        tmp->movements[0] = array[cpt];
+        tmp->movements[0] = array[cpt];         // probleme type SMove* / Pile*
         tmp->nbMoves = 1;
         push(moves,tmp);
     }
@@ -203,8 +203,8 @@ Pile* combination2(SMove* array, int size){
         if(b>a){
             tmp = calloc(1,sizeof(IAMove));
             tmp->movements = calloc(2,sizeof(SMove));
-            tmp->movements[0] = array[a];
-            tmp->movements[1] = array[b];
+            tmp->movements[0] = array[a];       //probleme type SMove / Pile
+            tmp->movements[1] = array[b];       //
             tmp->nbMoves = 2;
             push(moves,tmp);
         }
@@ -224,10 +224,10 @@ Pile* combination4(SMove* array, int size){
         if(d>c && c>b && b>a){
             tmp = calloc(1,sizeof(IAMove));
             tmp->movements = calloc(4,sizeof(SMove));
-            tmp->movements[0] = array[a];
-            tmp->movements[1] = array[b];
-            tmp->movements[2] = array[c];
-            tmp->movements[3] = array[d];
+            tmp->movements[0] = array[a];       // probleme type SMove / Pile
+            tmp->movements[1] = array[b];       //
+            tmp->movements[2] = array[c];       //
+            tmp->movements[3] = array[d];       //
             tmp->nbMoves = 4;
             push(moves,tmp);
         }
