@@ -1,0 +1,1 @@
+SMove* getAllPossibleMoves(SGameState *gameState, int player, unsigned char dice[2]);

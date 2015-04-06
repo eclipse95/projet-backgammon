@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "arbitre.h"
 #include "backgammon.h"
+#include "interface.h"
 
 //void deroulement_du_jeu()  --->>> mis par le prof
 int main()
