@@ -63,7 +63,7 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
     nbMove = (unsigned int*) res->nbMoves;      // probleme d'affectation nbMove est paramètre
     int ite;
-    for(ite=0 ; ite<nbMove ; ite++){
+    for(ite=0 ; ite<*nbMove ; ite++){
         moves[ite] = res->movements[ite];        // Problème de type SMove* / ? (cf struct IAMove)
     }
 
@@ -77,7 +77,7 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
 IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]){
     IA* allMovements = (IA*) calloc(1,sizeof(IA));
-    SMove* array;// Stocke la liste des mouvements possibles pendant ce tour (peut contenir des doublons)
+    SMove* array = NULL;// Stocke la liste des mouvements possibles pendant ce tour (peut contenir des doublons)
     int arraySize = 0;
 
     int nbMove;
@@ -96,7 +96,6 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     if(arraySize == 0){
     	return NULL;
     }
-
     // On récupère les combinaisons
     switch(nbMove){
     case 4:
@@ -122,16 +121,16 @@ IA* getAllScores(const SGameState* const gameState, IA* allMovements){
     Maillon* tmp = allMovements->movements->first;
 
     do{
-        IAMove* moves = (IAMove*) tmp->suiv->movement;
+        IAMove* moves = (IAMove*) tmp->suiv->movement;      // remplacer par IAScore ?
 
-        tmp->score = globalScore - getScore(gameState, moves); //! Problème type int - IAMove*
+        tmp->score = globalScore - getScore(gameState, moves)->score; //! Problème type int - IAMove*
     }while(tmp->suiv != NULL);
 
     return allMovements;
 }
 
 int getGlobalScore(const SGameState* const gameState){
-
+    return 1;       // TODO <!> à modifier
 }
 
 IAScore* getScore(const SGameState* const gameState, IAMove* moves){
@@ -141,15 +140,15 @@ IAScore* getScore(const SGameState* const gameState, IAMove* moves){
 
     int ite;
     for(ite = 0 ; ite < moves->nbMoves ; ite++){
-        SMove* tmp = moves->movements[ite];     // Problème de type SMove* / Pile*
+        SMove* tmp = &moves->movements[ite];     // Problème de type SMove* / Pile*
 
-        if(gameState->board[tmp->src_point].owner == player){       // player non défini
+        if(gameState->board[tmp->src_point].owner == var_globale.me){       // player non défini
             /*if(gameState->board[tmp.dest_point].nbDames == 2){
                 score->notSafe++;
             }*/ // Gestion de la sécurité
             score->score += (tmp->dest_point - tmp->src_point);
 
-            if(gameState->board[tmp->dest_point].owner != player &&      // player non défini
+            if(gameState->board[tmp->dest_point].owner != var_globale.me &&      // player non défini
                gameState->board[tmp->dest_point].owner != -1 &&
                gameState->board[tmp->dest_point].nbDames == 1){
                 score->score += (24 - tmp->dest_point); // TODO
@@ -240,3 +239,4 @@ void init_stock_var(stock_var* var)
     var->me = NOBODY;
     var->score = 0;
 }
+

@@ -84,9 +84,9 @@ int testPile(){
         test = 1;
     }
 
-    push(pile,"test1");     // ne peut pas marcher -> push(Pile*,IAMove*)
+    //push(pile,"test1");     // ne peut pas marcher -> push(Pile*,IAMove*)
 
-    push(pile,"test2");
+    //push(pile,"test2");
 
     if(estVide(pile)){
         printf("ERROR - echec de la fonction push\n");
@@ -125,4 +125,35 @@ int testPile(){
     }
 */
     return test;
+}
+
+
+IAMove* create_IAMove()
+{
+    IAMove* tmp = malloc(sizeof(IAMove));
+    tmp->nbMoves = 10;
+    tmp->movements = malloc(sizeof(SMove)*tmp->nbMoves);
+    return tmp;
+}
+
+void realloc_IAMove(IAMove* move, int new_size )
+{
+    if(move != NULL)
+    {
+        if (move->nbMoves > new_size)
+            move->nbMoves += new_size;
+        else
+            move->nbMoves = new_size;
+        //move = realloc()
+    }
+}
+
+void delete_IAMove(IAMove* move)
+{
+    if(move != NULL)
+    {
+        if(move->movements != NULL)
+            free(move->movements);
+        free(move);
+    }
 }

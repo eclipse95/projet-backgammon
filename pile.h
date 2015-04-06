@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "ia_lib.h"
 typedef struct Maillon Maillon;
 
 // IAMove
-typedef struct				// <!> A modifier // TODO
+typedef struct
 {
-    int* movements;		// Changer le type
+    SMove* movements;
     int nbMoves;
 } IAMove;
 
@@ -34,7 +34,7 @@ void push(Pile*, IAMove*);
 
 void pop(Pile*);
 
-IAMove* top(Pile*); // problème retour pile* / IAMove*
+IAMove* top(Pile*); // problÃ¨me retour pile* / IAMove*
 
 // destructeurs
 void delete_maillon(Maillon*);
@@ -42,4 +42,11 @@ void delete_maillon(Maillon*);
 void delete_pile(Pile*);
 
 int testPile();
+
+IAMove* create_IAMove();
+
+void delete_IAMove(IAMove*);
+
+void realloc_IAMove(IAMove*, int);
+
 

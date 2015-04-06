@@ -69,16 +69,16 @@ SGameState* InitState()              /*  12 ---- 23
 {
 	SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire
 	InitBoard(gameState);
-	gameState->bar[WHITE].nbDames=0;	// bar n'a pas d'attribut
-	gameState->bar[WHITE].owner=NOBODY;	// bar n'a pas d'attribut
-	gameState->bar[BLACK].nbDames=0;
-	gameState->bar[BLACK].owner=NOBODY;
-	gameState->out[WHITE].nbDames=0;
-	gameState->out[WHITE].owner=NOBODY;
-	gameState->out[BLACK].nbDames=0;
-	gameState->out[BLACK].owner=NOBODY;
-	gameState->whiteScore=0;
-	gameState->blackScore=0;
+	gameState->bar[WHITE] = 0;	// bar n'a pas d'attribut
+	//gameState->bar[WHITE].owner=NOBODY;	// bar n'a pas d'attribut
+	gameState->bar[BLACK] = 0;
+	//gameState->bar[BLACK].owner=NOBODY;
+	gameState->out[WHITE] = 0;
+	//gameState->out[WHITE].owner=NOBODY;	// out n'a pas d'attribut
+	gameState->out[BLACK] = 0;
+	//gameState->out[BLACK].owner=NOBODY;
+	gameState->whiteScore = 0;
+	gameState->blackScore = 0;
 	return gameState;
 }
 
@@ -94,29 +94,29 @@ unsigned char* rollDice(unsigned char* dice)
 }
 
 
-SMove* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves après chaque mouvement effectué
+SMove* emptyMoves(SMove* moves, int tailleMoves) //on vide les moves après chaque mouvement effectué
 {
 	if (moves != NULL)
 	{
 		int i;
 	    	for (i=0; i<tailleMoves; i++)
 	    	{
-	        	moves[i]->src_point = 0;
-	        	moves[i]->dest_point = 0;
+	        	moves[i].src_point = 0;
+	        	moves[i].dest_point = 0;
 	    	}
 	}
 	return moves;
 }
 
 
-int verif_sens(SMoves* moves, int player, int tailleMoves)
+int verif_sens(SMove* moves, int player, int tailleMoves)
 {
     int i;
     for (i=0; i<tailleMoves; i++) 
     {
     	if (player==BLACK)
     	{
-    		if (moves[i]->dest_point - moves[i]->src_point > 0)
+    		if (moves[i].dest_point - moves[i].src_point > 0)
     		{
     		    printf("Erreur de sens");
     	        return -1;  // on vérifie que le pion ne se déplace pas dans le sens inverse
@@ -124,7 +124,7 @@ int verif_sens(SMoves* moves, int player, int tailleMoves)
     	}
     	else if (player==WHITE)
     	{
-    		if (moves[i]->dest_point - moves[i]->src_point < 0)
+    		if (moves[i].dest_point - moves[i].src_point < 0)
     		{
     		    printf("Erreur de sens !\n");
     	        return -1;  // on vérifie que le pion ne se déplace pas dans le sens inverse
@@ -134,7 +134,7 @@ int verif_sens(SMoves* moves, int player, int tailleMoves)
     return 0;
 }
 
-int verif_taille_deplacement(SMoves * moves, int tailleMoves, unsigned char dices[2])
+int verif_taille_deplacement(SMove * moves, int tailleMoves, unsigned char dices[2])
 {
     int i, j;
     int nb_des;
@@ -178,16 +178,16 @@ int verif_taille_deplacement(SMoves * moves, int tailleMoves, unsigned char dice
 }
 
 
-int move(SMoves* moves, SGameState* gameState, int tailleMoves, int player)
+int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
 {
 	int i;
 	for (i=0; i<tailleMoves; i++)
 	{
-	    if (moves[i]->src_point > 0 && moves[i]->src_point < 25) // si le pion est dans le tableau
+	    if (moves[i].src_point > 0 && moves[i].src_point < 25) // si le pion est dans le tableau
         {
-            gameState->board[moves[i]->src_point-1].nbDames--; // on enlève un pion de la pile source
+            gameState->board[moves[i].src_point-1].nbDames--; // on enlève un pion de la pile source
         }
-	    else if (moves[i]->src_point == 0) // retour en jeu d'un pion en sortie
+	    else if (moves[i].src_point == 0) // retour en jeu d'un pion en sortie
 	    {
 	        gameState->out[player]--; 
 	    }
@@ -197,21 +197,21 @@ int move(SMoves* moves, SGameState* gameState, int tailleMoves, int player)
 	        return -1;
 	    }
 	    
-	    if (moves[i]->dest_point > 0 && moves[i]->dest_point < 25) // si le pion est dans le tableau
+	    if (moves[i].dest_point > 0 && moves[i].dest_point < 25) // si le pion est dans le tableau
 	    {
-    		if (gameState->board[moves[i]->dest_point-1].owner != player && gameState->board[moves[i]->dest_point-1].nbDames==1) // si on peut prendre la case
+    		if (gameState->board[moves[i].dest_point-1].owner != player && gameState->board[moves[i].dest_point-1].nbDames==1) // si on peut prendre la case
     		{
     			gameState->out[gameState->board[moves[i].dest_point-1].owner]++; // ajout à la case destination
-    			gameState->board[moves[i].dest_point-1].owner=player; // propriétaire de la case change
+    			gameState->board[moves[i].dest_point-1].owner = player; // propriétaire de la case change
     		}
-    		else if (gameState->board[moves[i]->dest_point-1].owner == NOBODY && gameState->board[moves[i]->dest_point-1].nbDames==0) // 
+    		else if (gameState->board[moves[i].dest_point-1].owner == NOBODY && gameState->board[moves[i].dest_point-1].nbDames==0) //
     		{
     		    gameState->board[moves[i].dest_point-1].nbDames++;
-    			gameState->board[moves[i].dest_point-1].owner=player; // prise d'une case libre
+    			gameState->board[moves[i].dest_point-1].owner = player; // prise d'une case libre
     		}
-    		else if (gameState->board[moves[i]->dest_point].owner == player) // on ajoute le pion à la case
+    		else if (gameState->board[moves[i].dest_point].owner == player) // on ajoute le pion à la case
     		{
-    			gameState->board[moves[i]->dest_point].nbDames++;
+    			gameState->board[moves[i].dest_point].nbDames++;
     		}
     		else // cas où on envoie sur une case où il y a au moins 2 pions adverses
     		{
@@ -219,7 +219,7 @@ int move(SMoves* moves, SGameState* gameState, int tailleMoves, int player)
     		    return -1;
     		}
 	    }
-	    else if (moves[i]->dest_point == 25) // on envoie sur la case bar
+	    else if (moves[i].dest_point == 25) // on envoie sur la case bar
 	    {
 	        gameState->bar[player]++;
 	    }
