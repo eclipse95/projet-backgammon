@@ -10,4 +10,4 @@ SGameState* InitState();
 unsigned char* rollDice(unsigned char* dice);
 SMove* emptyMoves(SMove* moves, int tailleMoves);
 SGameState* move(SMove* moves, SGameState gameState, int tailleMoves);
-SMove* getAllPossibleMoves(SGameState *gameState, int player);
+SMove* getAllPossibleMoves(SGameState *gameState, int player, unsigned char dice[2]);

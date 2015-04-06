@@ -232,13 +232,34 @@ int move(SMoves* moves, SGameState* gameState, int tailleMoves, int player)
 	return 0;
 }
 
-SMove* getAllPossibleMoves(SGameState *gameState, int player)
+// MODIF POSSIBLE : Passer le tableau de SMove en paramètre parce que le code est hyper gourmand ; Je sais pas si vous voulez utiliser ça donc je m'avance pas
+// Possibles causes de bug :
+// - cast de unsigned char vers unsigned int pour faire les additions : possible ?
+// - tableau de SMove initialisé à ???, je ne sais pas trop comment rajouter un SMove dans le tableau
+SMove* getAllPossibleMoves(SGameState *gameState, int player, unsigned char dice[2]) // fonction qui retourne tous les moves que peut faire un joueur / une IA en fonction de son ID et de ses dés
 {
-	int i;
-	SMove* moves;
-	for(i=0;i<24;i++)
+	unsigned int i,j;
+	unsigned int k=0;
+	SMove moves[30]; // nombre arbitraire, 15 * 2 coups max si tout est réparti à peu près
+	for(i=0;i<24;i++) // on check chaque case
 	{
-		
+		if(gameState->board.owner==player) // on check seulement pour les pions que le joueur renseigné possède
+		{
+			for(j=0;j<2;j++) // on regarde pour les 2 dés;
+			{
+				unsigned int destination = i + (unsigned int)dice[j]); // point d'arrivée en partant de i vers le i+le résultat du dé
+				if(destination <= 25) // on vérifie qu'on ne sort pas du board
+				{
+					// A AMELIORER : ON NE SAIT PAS ENCORE SI ON PEUT METTRE DES PIONS A L'ARRIVEE
+					if(gameState->board[destination].owner==-1 || gameState->board[destination].owner==player)
+					{
+						moves[k].src_point=i;
+						moves[k].dest_point=destination;
+						k++;
+					}
+				}
+			}
+		}
 	}
 	return moves;
 }
