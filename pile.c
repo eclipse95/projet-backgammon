@@ -131,8 +131,8 @@ int testPile(){
 IAMove* create_IAMove()
 {
     IAMove* tmp = malloc(sizeof(IAMove));
-    tmp->nbMoves = 10;
-    tmp->movements = malloc(sizeof(SMove)*tmp->nbMoves);
+    tmp->nbMoves = 4;
+    tmp->movements = calloc((size_t) tmp->nbMoves, sizeof(SMove));
     return tmp;
 }
 

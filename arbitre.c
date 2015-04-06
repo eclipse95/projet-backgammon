@@ -88,7 +88,7 @@ unsigned char* rollDice(unsigned char* dice)
 	int i;
 	for(i=0;i<2;i++)
 	{
-		dice[i]=(rand() % 6)+1;
+		dice[i]=(rand() % 6)+1;		// peut-être cast nécessaire
 	}
 	return dice;
 }

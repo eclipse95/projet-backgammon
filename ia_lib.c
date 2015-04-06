@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "pile.h"
 
 // variable globale
 stock_var var_globale;
@@ -121,9 +122,9 @@ IA* getAllScores(const SGameState* const gameState, IA* allMovements){
     Maillon* tmp = allMovements->movements->first;
 
     do{
-        IAMove* moves = (IAMove*) tmp->suiv->movement;      // remplacer par IAScore ?
+        IAMove* moves = tmp->suiv->movement;      // remplacer par IAScore ?
 
-        tmp->score = globalScore - getScore(gameState, moves)->score; //! Problème type int - IAMove*
+        tmp->score = globalScore - getScore(gameState, moves)->score; //! Problème tmp type maillon
     }while(tmp->suiv != NULL);
 
     return allMovements;
@@ -142,7 +143,7 @@ IAScore* getScore(const SGameState* const gameState, IAMove* moves){
     for(ite = 0 ; ite < moves->nbMoves ; ite++){
         SMove* tmp = &moves->movements[ite];     // Problème de type SMove* / Pile*
 
-        if(gameState->board[tmp->src_point].owner == var_globale.me){       // player non défini
+        if(gameState->board[tmp->src_point].owner == var_globale.me){       // player non défini // résolu
             /*if(gameState->board[tmp.dest_point].nbDames == 2){
                 score->notSafe++;
             }*/ // Gestion de la sécurité
@@ -162,16 +163,16 @@ IAScore* getScore(const SGameState* const gameState, IAMove* moves){
 IAMove* getBest(IA* allMovements){
     int maxScore = -1;
     IAMove* best;
-
+    IAMove* move = NULL;
     Maillon* tmp = allMovements->movements->first;
 
     do{
-        IAMove* move = tmp->suiv->movement;
+        move = tmp->suiv->movement;
 
-        if(move->score > maxScore){ // Possibilité d'utiliser une variable globale pour la tolérance niveau sécurité
-            best = move;
-        }
     }while(tmp->suiv != NULL);
+    if(move->score > maxScore){ // Possibilité d'utiliser une variable globale pour la tolérance niveau sécurité
+        best = move;
+    }
 
     return best;
 }
@@ -185,9 +186,9 @@ Pile* combination1(SMove* array, int size){
     for(cpt=1; cpt<size ; cpt++){
         tmp = calloc(1,sizeof(IAMove));
         tmp->movements = calloc(1,sizeof(SMove));
-        tmp->movements[0] = array[cpt];         // probleme type SMove* / Pile*
+        tmp->movements[0] = array[cpt];
         tmp->nbMoves = 1;
-        push(moves,tmp);
+        push(moves,tmp);         // probleme type SMove* / IAMove
     }
     return moves;
 }
@@ -212,7 +213,7 @@ Pile* combination2(SMove* array, int size){
 }
 
 Pile* combination4(SMove* array, int size){
-    Pile* moves = (Pile*) createPile();
+    Pile* moves = createPile();
     IAMove* tmp;
     int cpt,a,b,c,d = 0;
     for(cpt=1; cpt<size*size*size*size ; cpt++){
@@ -221,14 +222,15 @@ Pile* combination4(SMove* array, int size){
         c = cpt / size*size;
         d = cpt / size*size*size;
         if(d>c && c>b && b>a){
-            tmp = calloc(1,sizeof(IAMove));
-            tmp->movements = calloc(4,sizeof(SMove));
+            //tmp = calloc(1,sizeof(IAMove));
+            //tmp->movements = calloc(4,sizeof(SMove));
+            tmp = create_IAMove();
             tmp->movements[0] = array[a];       // probleme type SMove / ?
             tmp->movements[1] = array[b];       //
             tmp->movements[2] = array[c];       //
             tmp->movements[3] = array[d];       //
             tmp->nbMoves = 4;
-            push(moves,tmp);
+            push(moves,tmp);        // problème type SMove/IAMove
         }
     }
     return moves;

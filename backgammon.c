@@ -9,7 +9,7 @@
 //void deroulement_du_jeu()  --->>> mis par le prof
 int main()
 {
-	srand(time(NULL));    //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
+	srand(time((time_t) NULL));    //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
 	void* libj1,* libj2;
 	// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici) -->> mis par le prof
 	SGameState* gameState=InitState();

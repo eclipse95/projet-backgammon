@@ -57,7 +57,7 @@ typedef struct // TODO
 } IAScore ;
 
 typedef struct{
-    Pile* movements;
+    Pile* movements;		// TODO <!> à modifier
     int size;
 }IA;
 
@@ -89,4 +89,3 @@ Pile* combination4(SMove* array, int size);
 
 
 // TODO Nouvelles fonctions à ajouter
-// TODO Implémenter struct IAScore et IAMove
