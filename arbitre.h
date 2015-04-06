@@ -8,5 +8,6 @@ int IsGameOver(SGameState *gameState);
 void InitBoard(SGameState* gameState);
 SGameState* InitState();
 unsigned char* rollDice(unsigned char* dice);
-SMoves* emptyMoves(SMoves* moves, int tailleMoves);
-SGameState* move(SMoves* moves, SGameState gameState, int tailleMoves);
+SMove* emptyMoves(SMove* moves, int tailleMoves);
+SGameState* move(SMove* moves, SGameState gameState, int tailleMoves);
+SMove* getAllPossibleMoves(SGameState *gameState, int player);

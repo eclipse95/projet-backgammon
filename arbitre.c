@@ -94,7 +94,7 @@ unsigned char* rollDice(unsigned char* dice)
 }
 
 
-SMoves* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves après chaque mouvement effectué
+SMove* emptyMoves(SMoves* moves, int tailleMoves) //on vide les moves après chaque mouvement effectué
 {
 	if (moves != NULL)
 	{
@@ -230,4 +230,15 @@ int move(SMoves* moves, SGameState* gameState, int tailleMoves, int player)
 	    }
 	}
 	return 0;
+}
+
+SMove* getAllPossibleMoves(SGameState *gameState, int player)
+{
+	int i;
+	SMove* moves;
+	for(i=0;i<24;i++)
+	{
+		
+	}
+	return moves;
 }
