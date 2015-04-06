@@ -69,14 +69,10 @@ SGameState* InitState()              /*  12 ---- 23
 {
 	SGameState* gameState = (SGameState*) malloc(sizeof(SGameState));	//allocation mémoire
 	InitBoard(gameState);
-	gameState->bar[WHITE] = 0;	// bar n'a pas d'attribut
-	//gameState->bar[WHITE].owner=NOBODY;	// bar n'a pas d'attribut
+	gameState->bar[WHITE] = 0;	
 	gameState->bar[BLACK] = 0;
-	//gameState->bar[BLACK].owner=NOBODY;
 	gameState->out[WHITE] = 0;
-	//gameState->out[WHITE].owner=NOBODY;	// out n'a pas d'attribut
 	gameState->out[BLACK] = 0;
-	//gameState->out[BLACK].owner=NOBODY;
 	gameState->whiteScore = 0;
 	gameState->blackScore = 0;
 	return gameState;
