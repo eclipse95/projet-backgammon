@@ -3,31 +3,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include "backgammon.h"
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <math.h>
 
 // MODIF POSSIBLE : Passer le tableau de SMove en paramètre parce que le code est hyper gourmand ; Je sais pas si vous voulez utiliser ça donc je m'avance pas
 // Possibles causes de bug :
 // - cast de unsigned char vers unsigned int pour faire les additions : possible ?
 // - tableau de SMove initialisé à ???, je ne sais pas trop comment rajouter un SMove dans le tableau
-SMove* getAllPossibleMoves(SGameState *gameState, int player, unsigned char dice[2]) // fonction qui retourne tous les moves que peut faire un joueur / une IA en fonction de son ID et de ses dés
+SMove* getAllPossibleMoves(SGameState *gameState, int player, unsigned char dice[2], SMove* moves) // fonction qui retourne tous les moves que peut faire un joueur / une IA en fonction de son ID et de ses dés
 {
-	unsigned int i,j;
+	unsigned int i,j,destination;
 	unsigned int k=0;
-	SMove moves[30]; // nombre arbitraire, 15 * 2 coups max si tout est réparti à peu près
 	for(i=0;i<24;i++) // on check chaque case
 	{
-		if(gameState->board.owner==player) // on check seulement pour les pions que le joueur renseigné possède
+		if(gameState->board[i].owner==player) // on check seulement pour les pions que le joueur renseigné possède
 		{
 			for(j=0;j<2;j++) // on regarde pour les 2 dés;
 			{
 				if(player==0)
 				{ 
-					unsigned int destination = i - (unsigned int)dice[j]; // point d'arrivée en partant de i vers le i-le résultat du dé (car dans l'autre sens pour joueur noir
+					destination = i - (unsigned int)dice[j]; // point d'arrivée en partant de i vers le i-le résultat du dé (car dans l'autre sens pour joueur noir
 				}
 				else
 				{
-					unsigned int destination = i + (unsigned int)dice[j]; // point d'arrivée en partant de i vers le i+le résultat du dé
+					destination = i + (unsigned int)dice[j]; // point d'arrivée en partant de i vers le i+le résultat du dé
 				}
 				if(destination <= 25) // on vérifie qu'on ne sort pas du board
 				{
