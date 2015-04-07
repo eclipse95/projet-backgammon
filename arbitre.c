@@ -238,7 +238,7 @@ int move(SMove moves[4], SGameState* gameState, int tailleMoves, int player, uns
 	{
 		for (i=0; i<tailleMoves; i++)
 		{
-			if (is_blocked(abs(moves[i].src_point-moves[i].dest_point), gameState, player)!=1) //si le joueur n'est pas bloqué, on effectue 1 mouvement, puis on revérifie pour le suivant
+			if (is_blocked(abs(moves[i].src_point-moves[i].dest_point), gameState, player)!=1 && abs(moves[i].src_point-moves[i].dest_point)!=0) //si le joueur n'est pas bloqué (et qu'il ne fait pas un mouvement nul), on effectue 1 mouvement, puis on revérifie pour le suivant
 			{
 				if (moves[i].src_point > 0 && moves[i].src_point < 25) // si le pion est dans le tableau
 				{
@@ -286,8 +286,14 @@ int move(SMove moves[4], SGameState* gameState, int tailleMoves, int player, uns
 					return -1;
 				}
 			}
+			else if (is_blocked(abs(moves[i].src_point-moves[i].dest_point), gameState, player)!=1 && abs(moves[i].src_point-moves[i].dest_point)==0) //si le joueur ne bouge pas alors qu'il peut
+			{
+				printf("Le joueur ne bouge pas alors qu'il peut !\n");
+				return -1;
+			}
 			else { return 0; }
 		}
 	}
+	else { return -1; }
 	return 0;
 }
