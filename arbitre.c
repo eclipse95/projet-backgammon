@@ -268,7 +268,7 @@ int is_blocked (int roll, SGameState* gameState, int player)
 				}
 			}
 		}
-		if (gameState->bar[player]!=0) de meme s'il a des pions dans bar
+		if (gameState->bar[player]!=0) //de meme s'il a des pions dans bar
 		{
 			if (gameState->board[roll-1].owner==player || (gamestate->board[roll-1].nbDames==0 && gamestate->board[roll-1].owner==NOBODY) || (gamestate->board[roll-1].nbDames==1 && gamestate->board[roll-1].owner==BLACK) )
 				{
