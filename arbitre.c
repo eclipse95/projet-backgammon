@@ -228,14 +228,14 @@ int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
 	return 0;
 }
 
-int is_blocked (int roll, SGameState* gameState, int player)
+int is_blocked (int roll, SGameState* gameState, Player player)
 {
-	if (player==BLACK)
+	if (player == BLACK)
 		for (i=roll; i<24 ; i++)
 		{
-			if (gameState->board[i].owner==player) //pour chaque case du joueur
+			if (gameState->board[i].owner == player) //pour chaque case du joueur
 			{
-				if (gameState->board[i-roll].owner==player || (gamestate->board[i-roll].nbDames==0 && gamestate->board[i-roll].owner==NOBODY) || (gamestate->board[i-roll].nbDames==1 && gamestate->board[i-roll].owner==WHITE) ) //on verifie qu'il peut faire un coup a partir de cette case
+				if (gameState->board[i-roll].owner == player || (gamestate->board[i-roll].nbDames==0 && gamestate->board[i-roll].owner==NOBODY) || (gamestate->board[i-roll].nbDames==1 && gamestate->board[i-roll].owner==WHITE) ) //on verifie qu'il peut faire un coup a partir de cette case
 				{
 					return 0;
 				}
@@ -257,7 +257,8 @@ int is_blocked (int roll, SGameState* gameState, int player)
 		}
 	}
 
-	if (player==WHITE)
+	else if(player == WHITE)
+	{
 		for (i=0; i<24-roll ; i++)
 		{
 			if (gameState->board[i].owner==player) //pour chaque case du joueur

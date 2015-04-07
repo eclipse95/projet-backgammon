@@ -63,8 +63,9 @@ int main()
 	j2StartMatch(5);
 
 	unsigned int nbMoves;
-	unsigned char dices[2]; //pb unsigned char unsigned int ?
-	int player, tailleMoves, startingPlayer;
+	unsigned char dices[2];
+	int tailleMoves;
+	Player player, startingPlayer;
 	unsigned int has_asked_double[2];
 	has_asked_double[BLACK]=0;
 	has_asked_double[WHITE]=0;
@@ -73,7 +74,7 @@ int main()
 	{
 		j1StartGame(BLACK);
 		j2StartGame(WHITE);
-		player=NOBODY;
+		player = NOBODY;
 		InitBoard(gameState);
 		while (player==NOBODY) //qui commence toujours déterminé par les dés ?
 		{
@@ -81,17 +82,17 @@ int main()
 			if(dices[BLACK] > dices[WHITE]) { player=BLACK; }else{ player=WHITE; }
 		}
 		
-		startingPlayer=player; //savoir qui a commencé permet de compter les turns
+		startingPlayer = player; //savoir qui a commencé permet de compter les turns
 		
 		while (IsGameOver(gameState)!=-1)
 		{
-			if (player==startingPlayer){ gameState->turn++;	}
+			if (player == startingPlayer){ gameState->turn++;	}
 			
 			rollDice(dices); // pas besoin d'affectation à dices, rollDice modifie le paramétre
 			if (dices[0]==dices[1]) { tailleMoves=4; }
 			else {tailleMoves=2;}
 			
-			if (player==BLACK)
+			if(player==BLACK)
 			{
 			  	if (has_asked_double[player]==0)
 			  	{//un joueur dont le DoubleStack a été accepté ne peut pas le redemander ensuite
@@ -118,7 +119,7 @@ int main()
 					player=WHITE;
 				}
 			}
-			else if (player==WHITE)
+			else if(player == WHITE)
 			{
 				if (has_asked_double[player]==0)
 				{//un joueur dont le DoubleStack a été accepté ne peut pas le redemander ensuite
