@@ -8,7 +8,14 @@ typedef struct
 {
     SMove* movements;
     int nbMoves;
+    IAScore* score;
 } IAMove;
+
+typedef struct
+{
+    int score;
+    int notSafe;
+} IAScore ;
 
 struct Maillon{
     Maillon* prec;

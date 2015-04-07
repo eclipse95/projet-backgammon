@@ -23,7 +23,7 @@ typedef struct {
 
 typedef struct
 {
-	unsigned int src_point;
+	unsigned int src_point; /*0 = Bar, [1,23] = terrain, 24 = home*/
 	unsigned int dest_point;
 } SMove;
 
@@ -49,15 +49,8 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 // custom struct and functions
 
 
-
-typedef struct // TODO
-{
-	int score;
-	int notSafe;
-} IAScore ;
-
 typedef struct{
-    Pile* movements;		// TODO <!> à modifier
+    Pile* movements;
     int size;
 }IA;
 
@@ -65,6 +58,7 @@ typedef struct
 {
 	int score;
 	Player me;
+	int onlyBarUsed;
 } stock_var;
 
 
