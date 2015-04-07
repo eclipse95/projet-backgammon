@@ -7,8 +7,8 @@
 
 int IsMatchOver(SGameState *gameState)
 {
-	if (gameState->bar[BLACK]==15) { return BLACK; } /*pions noirs sur last case = 15*/
-	else if (gameState->bar[WHITE]==15) { return WHITE; } /*pions blancs sur last case = 15*/
+	if (gameState->out[BLACK]==15) { return BLACK; } /*pions noirs sur last case = 15*/
+	else if (gameState->out[WHITE]==15) { return WHITE; } /*pions blancs sur last case = 15*/
 	else { return NOBODY; }
 }
 
@@ -185,7 +185,7 @@ int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
         }
 	    else if (moves[i].src_point == 0) // retour en jeu d'un pion en sortie
 	    {
-	        gameState->out[player]--; 
+	        gameState->bar[player]--; 
 	    }
 	    else // mouvement en dehors du tableau donc on le signale
 	    {
@@ -197,7 +197,7 @@ int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
 	    {
     		if (gameState->board[moves[i].dest_point-1].owner != player && gameState->board[moves[i].dest_point-1].nbDames==1) // si on peut prendre la case
     		{
-    			gameState->out[gameState->board[moves[i].dest_point-1].owner]++; // ajout à la case destination
+    			gameState->bar[gameState->board[moves[i].dest_point-1].owner]++; // ajout à la case destination
     			gameState->board[moves[i].dest_point-1].owner = player; // propriétaire de la case change
     		}
     		else if (gameState->board[moves[i].dest_point-1].owner == NOBODY && gameState->board[moves[i].dest_point-1].nbDames==0) //
@@ -217,7 +217,7 @@ int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
 	    }
 	    else if (moves[i].dest_point == 25) // on envoie sur la case bar
 	    {
-	        gameState->bar[player]++;
+	        gameState->out[player]++;
 	    }
 	    else
 	    {
@@ -228,3 +228,60 @@ int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
 	return 0;
 }
 
+int is_blocked (int roll, SGameState gameState, int player)
+{
+	if (player==BLACK)
+		for (i=roll; i<24 ; i++)
+		{
+			if (gameState->board[i].owner==player) //pour chaque case du joueur
+			{
+				if (gameState->board[i-roll].owner==player || (gamestate->board[i-roll].nbDames==0 && gamestate->board[i-roll].owner==NOBODY) || (gamestate->board[i-roll].nbDames==1 && gamestate->board[i-roll].owner==WHITE) ) //on verifie qu'il peut faire un coup a partir de cette case
+				{
+					return 0;
+				}
+			}
+		}
+		if (gameState->bar[player]!=0) //de meme s'il a des pions out
+		{
+			if (gameState->board[24-roll].owner==player || (gamestate->board[24-roll].nbDames==0 && gamestate->board[24-roll].owner==NOBODY) || (gamestate->board[24-roll].nbDames==1 && gamestate->board[24-roll].owner==WHITE) )
+				{
+					return 0;
+				}
+		}
+		for (i=0; i<roll ; i++)
+		{
+			if (gameState->board[i].owner==player) //pour chaque case du joueur
+			{
+				return 0;
+			}
+		}
+	}
+
+	if (player==WHITE)
+		for (i=0; i<24-roll ; i++)
+		{
+			if (gameState->board[i].owner==player) //pour chaque case du joueur
+			{
+				if (gameState->board[i+roll].owner==player || (gamestate->board[i+roll].nbDames==0 && gamestate->board[i+roll].owner==NOBODY) || (gamestate->board[i+roll].nbDames==1 && gamestate->board[i+roll].owner==BLACK) ) //on verifie qu'il peut faire un coup a partir de cette case
+				{
+					return 0;
+				}
+			}
+		}
+		if (gameState->bar[player]!=0) de meme s'il a des pions dans bar
+		{
+			if (gameState->board[roll-1].owner==player || (gamestate->board[roll-1].nbDames==0 && gamestate->board[roll-1].owner==NOBODY) || (gamestate->board[roll-1].nbDames==1 && gamestate->board[roll-1].owner==BLACK) )
+				{
+					return 0;
+				}
+		}
+		for (i=24-roll; i<25 ; i++)
+		{
+			if (gameState->board[i].owner==player) //pour chaque case du joueur
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
