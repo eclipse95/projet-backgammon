@@ -228,7 +228,7 @@ int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
 	return 0;
 }
 
-int is_blocked (int roll, SGameState gameState, int player)
+int is_blocked (int roll, SGameState* gameState, int player)
 {
 	if (player==BLACK)
 		for (i=roll; i<24 ; i++)
