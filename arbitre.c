@@ -90,7 +90,7 @@ unsigned char* rollDice(unsigned char* dice)
 }
 
 
-SMove* emptyMoves(SMove* moves, int tailleMoves) //on vide les moves après chaque mouvement effectué
+SMove* emptyMoves(SMove moves[4], int tailleMoves) //on vide les moves après chaque mouvement effectué
 {
 	if (moves != NULL)
 	{
@@ -105,7 +105,7 @@ SMove* emptyMoves(SMove* moves, int tailleMoves) //on vide les moves après chaq
 }
 
 
-int verif_sens(SMove* moves, int player, int tailleMoves)
+int verif_sens(SMove moves[4], int player, int tailleMoves)
 {
     int i;
     for (i=0; i<tailleMoves; i++) 
@@ -130,7 +130,7 @@ int verif_sens(SMove* moves, int player, int tailleMoves)
     return 0;
 }
 
-int verif_taille_deplacement(SMove * moves, int tailleMoves, unsigned char dices[2])
+int verif_taille_deplacement(SMove moves[4], int tailleMoves, unsigned char dices[2])
 {
     int i, j;
     int nb_des;
@@ -174,7 +174,7 @@ int verif_taille_deplacement(SMove * moves, int tailleMoves, unsigned char dices
 }
 
 
-int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
+int move(SMove moves[4], SGameState* gameState, int tailleMoves, int player)
 {
 	int i;
 	for (i=0; i<tailleMoves; i++)
