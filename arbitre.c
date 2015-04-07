@@ -231,6 +231,7 @@ int move(SMove* moves, SGameState* gameState, int tailleMoves, int player)
 int is_blocked (int roll, SGameState* gameState, Player player)
 {
 	if (player == BLACK)
+	{
 		for (i=roll; i<24 ; i++)
 		{
 			if (gameState->board[i].owner == player) //pour chaque case du joueur
@@ -257,7 +258,7 @@ int is_blocked (int roll, SGameState* gameState, Player player)
 		}
 	}
 
-	else if(player == WHITE)
+	if(player == WHITE)
 	{
 		for (i=0; i<24-roll ; i++)
 		{
