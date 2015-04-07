@@ -90,7 +90,7 @@ unsigned char* rollDice(unsigned char* dice)
 }
 
 
-SMove* emptyMoves(SMove moves[4], int tailleMoves) //on vide les moves après chaque mouvement effectué
+int emptyMoves(SMove moves[4], int tailleMoves) //on vide les moves après chaque mouvement effectué
 {
 	if (moves != NULL)
 	{
@@ -101,7 +101,7 @@ SMove* emptyMoves(SMove moves[4], int tailleMoves) //on vide les moves après ch
 			moves[i].dest_point = 0;
 		}
 	}
-	return moves;
+	return 0;
 }
 
 
