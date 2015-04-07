@@ -95,8 +95,6 @@ void delete_maillon(Maillon*);
 
 void delete_pile(Pile*);
 
-int testPile();
-
 IAMove* create_IAMove();
 
 void delete_IAMove(IAMove*);

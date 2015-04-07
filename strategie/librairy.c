@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "librairy.h"
+#include <assert.h>
 
 // compile avec Code::Blocks    // mon CMake est foireux
 // 1 warning
@@ -70,8 +71,8 @@ int TakeDouble(const SGameState * const gameState)
 void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], SMove moves[4], unsigned int* nbMove, unsigned int tries)
 //typedef void (*pfPlayTurn)(const SGameState * const,  const unsigned char[2], SMove[4], unsigned int*, unsigned int);
 {
-    IA* movements;
-    IAMove* res;
+    IA* movements = NULL;
+    IAMove* res = NULL;
     //generate All Moves Possible
     movements = getAllMovements(gameState,dices);
 
@@ -81,11 +82,10 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     //return first
     res = getBest(movements);
 
-    //nbMove = (unsigned int*) res->nbMoves;      // TODO pourquoi ne pas faire passer globalement en unsigned int ?
-    // ET WHY CAST INT TO POINTER ?! seg_fault
+    res->nbMoves = *nbMove;
 
-    *nbMove = (unsigned int)res->nbMoves;
-
+    assert(movements != NULL);
+    assert(res != NULL);
 
     int ite;
     for(ite=0 ; ite<res->nbMoves ; ite++){
@@ -93,7 +93,6 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     }
 
     free(movements);
-    free(res);
 }
 
 
@@ -115,7 +114,9 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     }
 
     // Generate all possible movements in array
-
+    assert(gameState != NULL);
+    assert(allMovements != NULL);
+    assert(array != NULL);
     int ite,dice,mov;
     if(gameState->bar[var_globale.me] > 0){ // Recherche des mouvements depuis la barre
         if(gameState->bar[var_globale.me] >= nbMove){
@@ -200,7 +201,6 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
     //free(array); Not a good idea...
     var_globale.onlyBarUsed = 0;
-
     return allMovements;
 }
 
@@ -259,7 +259,7 @@ IAScore* getScore(const SGameState* const gameState, IAMove* moves){
             }
 
             // Check de la destination
-            if(gameState->board[tmp->dest_point].owner != var_globale.me &&      // player non défini
+            if(gameState->board[tmp->dest_point].owner != var_globale.me &&
                gameState->board[tmp->dest_point].owner != -1 &&
                gameState->board[tmp->dest_point].nbDames == 1){
                 score->score += (24*((var_globale.me+1)%2)) + tmp->dest_point;
@@ -278,6 +278,7 @@ IAMove* getBest(IA* allMovements){
 
     do{
         move = tmp->movement;
+        assert(move != NULL);
         if(move->score->score > maxScore && move->score->notSafe == 0){ // Possibilité d'utiliser une variable globale pour la tolérance niveau sécurité
             best = move;
         }
@@ -293,8 +294,9 @@ IAMove* getBest(IA* allMovements){
 // C(n,k) recherche des combinaisons
 Pile* combination1(SMove* array, int size){
     Pile* moves = createPile();
-    IAMove* tmp;
+    IAMove* tmp = NULL;
     int cpt = 0;
+    assert(array != NULL);
     for(cpt=1; cpt<size ; cpt++){
         tmp = calloc(1,sizeof(IAMove));
         tmp->movements = calloc(1,sizeof(SMove));
@@ -335,12 +337,12 @@ Pile* combination4(SMove* array, int size){
         d = cpt / size*size*size;
         if(d>c && c>b && b>a){
             tmp = create_IAMove();
-            tmp->movements[0] = array[a];       // probleme type SMove / ?
-            tmp->movements[1] = array[b];       //
-            tmp->movements[2] = array[c];       //
-            tmp->movements[3] = array[d];       //
+            tmp->movements[0] = array[a];
+            tmp->movements[1] = array[b];
+            tmp->movements[2] = array[c];
+            tmp->movements[3] = array[d];
             tmp->nbMoves = 4;
-            push(moves,tmp);        // problème type SMove/IAMove
+            push(moves,tmp);
         }
     }
     return moves;
@@ -436,57 +438,6 @@ void delete_pile(Pile* pile)
     for(i = 0; i < pile->size; i++)
         pop(pile);
     free(pile);
-}
-
-int testPile(){
-    int test = 0;
-    Pile* pile = createPile();
-    if(!estVide(pile)){
-        printf("ERROR - echec dans la creation de la pile\n");
-        test = 1;
-    }
-
-    //push(pile,"test1");     // ne peut pas marcher -> push(Pile*,IAMove*)
-
-    //push(pile,"test2");
-
-    if(estVide(pile)){
-        printf("ERROR - echec de la fonction push\n");
-        test = 1;
-    }
-
-    printf("%d\n",pile->size);
-
-    pop(pile);
-
-/*
-    push(&pile,"test2");
-    printf("%s\n",(&pile)->last->balise);
-
-    pop(&pile);
-    printf("%s\n",(&pile)->last->balise);
-
-    if((&pile)->last->balise != "test2"){
-        printf("ERROR - echec de top\n");
-        test = 1;
-    }
-
-    pop(&pile);
-
-    if(top(&pile) != "test1"){
-        printf("ERROR - echec de pop dans sa récupération\n");
-        test = 1;
-    }
-
-
-    pop(&pile);
-
-    if(!estVide(&pile)){
-        printf("ERROR - echec de pop dans sa suppression\n");
-        test = 1;
-    }
-*/
-    return test;
 }
 
 
