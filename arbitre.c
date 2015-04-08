@@ -174,13 +174,14 @@ int verif_taille_deplacement(SMove moves[4], int tailleMoves, unsigned char dice
 
 int is_blocked (int roll, SGameState* gameState, Player player)
 {
+	int i;
 	if (player == BLACK)
 	{
 		for (i=roll; i<24 ; i++)
 		{
 			if (gameState->board[i].owner == player) //pour chaque case du joueur
 			{
-				if (gameState->board[i-roll].owner == player || (gamestate->board[i-roll].nbDames==0 && gamestate->board[i-roll].owner==NOBODY) || (gamestate->board[i-roll].nbDames==1 && gamestate->board[i-roll].owner==WHITE) ) //on verifie qu'il peut faire un coup a partir de cette case
+				if (gameState->board[i-roll].owner == player || (gameState->board[i-roll].nbDames==0 && gameState->board[i-roll].owner==NOBODY) || (gameState->board[i-roll].nbDames==1 && gameState->board[i-roll].owner==WHITE) ) //on verifie qu'il peut faire un coup a partir de cette case
 				{
 					return 0;
 				}
@@ -188,7 +189,7 @@ int is_blocked (int roll, SGameState* gameState, Player player)
 		}
 		if (gameState->bar[player]!=0) //de meme s'il a des pions out
 		{
-			if (gameState->board[24-roll].owner==player || (gamestate->board[24-roll].nbDames==0 && gamestate->board[24-roll].owner==NOBODY) || (gamestate->board[24-roll].nbDames==1 && gamestate->board[24-roll].owner==WHITE) )
+			if (gameState->board[24-roll].owner==player || (gameState->board[24-roll].nbDames==0 && gameState->board[24-roll].owner==NOBODY) || (gameState->board[24-roll].nbDames==1 && gameState->board[24-roll].owner==WHITE) )
 				{
 					return 0;
 				}
@@ -207,7 +208,7 @@ int is_blocked (int roll, SGameState* gameState, Player player)
 		{
 			if (gameState->board[i].owner==player) //pour chaque case du joueur
 			{
-				if (gameState->board[i+roll].owner==player || (gamestate->board[i+roll].nbDames==0 && gamestate->board[i+roll].owner==NOBODY) || (gamestate->board[i+roll].nbDames==1 && gamestate->board[i+roll].owner==BLACK) ) //on verifie qu'il peut faire un coup a partir de cette case
+				if (gameState->board[i+roll].owner==player || (gameState->board[i+roll].nbDames==0 && gameState->board[i+roll].owner==NOBODY) || (gameState->board[i+roll].nbDames==1 && gameState->board[i+roll].owner==BLACK) ) //on verifie qu'il peut faire un coup a partir de cette case
 				{
 					return 0;
 				}
@@ -215,7 +216,7 @@ int is_blocked (int roll, SGameState* gameState, Player player)
 		}
 		if (gameState->bar[player]!=0) //de meme s'il a des pions dans bar
 		{
-			if (gameState->board[roll-1].owner==player || (gamestate->board[roll-1].nbDames==0 && gamestate->board[roll-1].owner==NOBODY) || (gamestate->board[roll-1].nbDames==1 && gamestate->board[roll-1].owner==BLACK) )
+			if (gameState->board[roll-1].owner==player || (gameState->board[roll-1].nbDames==0 && gameState->board[roll-1].owner==NOBODY) || (gameState->board[roll-1].nbDames==1 && gameState->board[roll-1].owner==BLACK) )
 				{
 					return 0;
 				}
