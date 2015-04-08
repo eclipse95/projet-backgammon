@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "backgammon.h"
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include <math.h>
 
 // MODIF POSSIBLE : Passer le tableau de SMove en paramètre parce que le code est hyper gourmand ; Je sais pas si vous voulez utiliser ça donc je m'avance pas
@@ -62,6 +62,12 @@ int main(int argc, char** argv)
 
 	SDL_Renderer *pRenderer = SDL_CreateRenderer(pWindow,-1,SDL_RENDERER_ACCELERATED); // Création
 	SDL_Surface* pSprite = SDL_LoadBMP("./img/backgammon.bmp");
+	if(pSprite==NULL)
+	{
+		printf("BMP loading failed : %s\n",SDL_GetError());
+		return 1;
+	}
+	
 	SDL_Texture* pTexture = SDL_CreateTextureFromSurface(pRenderer,pSprite); 
 	SDL_Rect dest = { 0,0, pSprite->w, pSprite->h};
 	SDL_RenderCopy(pRenderer,pTexture,NULL,&dest); // Copie du sprite
