@@ -1,8 +1,8 @@
 #include "ia_lib.h"
+#include "pile.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "pile.h"
 
 // variable globale
 stock_var var_globale;
@@ -82,7 +82,8 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     //nbMove = (unsigned int*) res->nbMoves;      // TODO pourquoi ne pas faire passer globalement en unsigned int ?
     // ET WHY CAST INT TO POINTER ?! seg_fault
 
-    nbMove = &(unsigned int)res->nbMoves;
+    unsigned int tmp = (unsigned int)res->nbMoves;
+    nbMove = &tmp;
 
 
     int ite;
@@ -104,7 +105,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     // Maximum de 15 mouvements car il y a 15 jetons par joueur
     int arraySize = 0;
 
-    int nbMove = 0;
+    int nbMove;
     if(dices[0] == dices[1]){
         nbMove = 4;
     }
@@ -132,7 +133,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
             else{
                 SMove* move = malloc(sizeof(SMove));
                 move->dest_point = 0;
-                move->src_point = (unsigned int) dest+1;
+                move->src_point = dest+1;
 
                 mov = 0;
                 while(mov < gameState->bar[var_globale.me] && mov<nbMove) {
@@ -158,8 +159,8 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
                     }
                     else{
                         SMove* move = malloc(sizeof(SMove));
-                        move->dest_point = (unsigned int) ite+1;
-                        move->src_point = (unsigned int) dest+1;
+                        move->dest_point = ite+1;
+                        move->src_point = dest+1;
 
                         mov = 0;
                         while(mov<gameState->board[ite].nbDames && mov<nbMove) {
@@ -176,11 +177,11 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
     //Fin de l'algo ici
 
-    // if(arraySize == 0)
-    // 	return NULL;
-
-    switch(nbMove)
-    {
+    if(arraySize == 0){
+    	return NULL;
+    }
+    // On récupère les combinaisons
+    switch(nbMove){
     case 4:
         allMovements->movements = combination4(array,arraySize);
         if(allMovements->movements->size > 0){
@@ -193,7 +194,6 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         }
     default:
         allMovements->movements = combination1(array,arraySize);
-        break;
     }
 
     //free(array); Not a good idea...
@@ -210,7 +210,8 @@ IA* getAllScores(const SGameState* const gameState, IA* allMovements){
     do{
         IAMove* moves = tmp->movement;
 
-        tmp->movement->score->score = globalScore - getScore(gameState, moves)->score;
+        moves->score = getScore(gameState, moves);
+        moves->score->score = globalScore - moves->score->score;
 
         tmp = tmp->suiv;
     }while(tmp != NULL);
@@ -241,7 +242,7 @@ IAScore* getScore(const SGameState* const gameState, IAMove* moves){
 
     int ite;
     for(ite = 0 ; ite < moves->nbMoves ; ite++){
-        SMove* tmp = &moves->movements[ite];
+        SMove* tmp = &(moves->movements[ite]);
 
         if(gameState->board[tmp->src_point].owner == var_globale.me){
             /*if(gameState->board[tmp.dest_point].nbDames == 2){
@@ -270,7 +271,7 @@ IAScore* getScore(const SGameState* const gameState, IAMove* moves){
 
 IAMove* getBest(IA* allMovements){
     int maxScore = -1;
-    IAMove* best = NULL;
+    IAMove* best;
     IAMove* move = NULL;
     Maillon* tmp = allMovements->movements->first;
 
@@ -305,12 +306,13 @@ Pile* combination1(SMove* array, int size){
 
 Pile* combination2(SMove* array, int size){
     Pile* moves = createPile();
-    IAMove* tmp = NULL;
+    IAMove* tmp;
     int cpt,a,b = 0;
     for(cpt=1; cpt<size*size ; cpt++){
         a = cpt % size;
         b = cpt / size;
-        if(b>a){
+        if(b>a &&
+                (array[a].dest_point - array[a].src_point) != (array[b].dest_point - array[b].src_point)){
             tmp = calloc(1,sizeof(IAMove));
             tmp->movements = calloc(2,sizeof(SMove));
             tmp->movements[0] = array[a];       //probleme type SMove / ?
@@ -324,21 +326,21 @@ Pile* combination2(SMove* array, int size){
 
 Pile* combination4(SMove* array, int size){
     Pile* moves = createPile();
-    IAMove* tmp = NULL;
+    IAMove* tmp;
     int cpt,a,b,c,d = 0;
     for(cpt=1; cpt<size*size*size*size ; cpt++){
         a = cpt % size;
-        b = cpt / size;
-        c = cpt / size*size;
-        d = cpt / size*size*size;
+        b = cpt % (size*size) / size;
+        c = cpt % (size*size*size) / (size*size);
+        d = cpt / (size*size*size);
         if(d>c && c>b && b>a){
             tmp = create_IAMove();
-            tmp->movements[0] = array[a];       // probleme type SMove / ?
-            tmp->movements[1] = array[b];       //
-            tmp->movements[2] = array[c];       //
-            tmp->movements[3] = array[d];       //
+            tmp->movements[0] = array[a];
+            tmp->movements[1] = array[b];
+            tmp->movements[2] = array[c];
+            tmp->movements[3] = array[d];
             tmp->nbMoves = 4;
-            push(moves,tmp);        // problème type SMove/IAMove
+            push(moves,tmp);
         }
     }
     return moves;
@@ -361,4 +363,19 @@ void init_stock_var(stock_var* var)
     var->me = NOBODY;
     var->score = 0;
     var->onlyBarUsed = 0;
+}
+
+
+void testCombi(int* array, int size){
+    int cpt,a,b,c,d,ite = 0;
+    for(cpt=1; cpt<size*size*size*size ; cpt++){
+        a = cpt % size;
+        b = cpt % (size*size) / size;
+        c = cpt % (size*size*size) / (size*size);
+        d = cpt / (size*size*size);
+        if(d>c && c>b && b>a){
+            ite++;
+            printf("combinaison %d : %d %d %d %d\n",ite,d,c,b,a);
+        }
+    }
 }
