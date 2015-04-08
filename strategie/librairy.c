@@ -4,9 +4,6 @@
 #include "librairy.h"
 #include <assert.h>
 
-// compile avec Code::Blocks    // mon CMake est foireux
-// 1 warning
-
 // variable globale
 stock_var var_globale;
 
@@ -171,7 +168,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
                 int canContinue = 1;
                 while(canContinue == 1){
                     canContinue = 0;
-                    for(dice=0; dice < nbMove; dice++){
+                    for(dice=0; dice < nbMove%3; dice++){
                         int val = dices[dice%2];
                         int dest = getDest(ite,val);
 
@@ -213,28 +210,40 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
     printf("DEBUG : number of possible movements = %d\n",arraySize);
 
+    //DEBUG Parcours
+    int j;
+    for(j=0; j<arraySize; j++){
+        printf("DEBUG : move %d => from %d to %d\n",j,array[j].src_point,array[j].dest_point);
+    }
+
+
     switch(nbMove)
     {
         case 4:
+            printf("DEBUG : Used combination of 4\n");
             allMovements->movements = combination4(array,arraySize);
             if(allMovements->movements->size > 0){
-                printf("DEBUG : Used combination of 4\n");
                 break;
             }
+            delete_pile(allMovements->movements);
         case 2:
+            printf("DEBUG : Used combination of 2\n");
             allMovements->movements = combination2(array,arraySize, gameState);
             if(allMovements->movements->size > 0){
-                printf("DEBUG : Used combination of 2\n");
                 break;
             }
+            delete_pile(allMovements->movements);
         default:
-            allMovements->movements = combination1(array,arraySize);
             printf("DEBUG : Used combination of 1\n");
+            allMovements->movements = combination1(array,arraySize);
+            if(allMovements->movements->size > 0){
+                nbMove = 0;
+            }
             break;
     }
 
     assert(allMovements->movements != NULL);
-    assert(allMovements->movements->size > 0);
+    assert(allMovements->movements->size > 0 || nbMove == 0);
 
     printf("DEBUG : Number of plays possible = %d\n", allMovements->movements->size);
 
@@ -356,6 +365,7 @@ Pile* combination1(SMove* array, int size){
     int cpt;
 
     for(cpt=1; cpt<size ; cpt++){
+        tmp = calloc(1,sizeof(IAMove));
         tmp->movements = calloc(1,sizeof(SMove));
         tmp->movements[0] = array[cpt];
         tmp->nbMoves = 1;
@@ -367,6 +377,7 @@ Pile* combination1(SMove* array, int size){
 
 Pile* combination2(SMove* array, int size, const SGameState* const gameState){ //TODO use a dictionnary
     Pile* moves = createPile();
+
     IAMove* tmp = NULL;
     int cpt,a,b = 0;
     Dictionnary* dico = createDico();
@@ -375,25 +386,30 @@ Pile* combination2(SMove* array, int size, const SGameState* const gameState){ /
         a = cpt % size;
         b = cpt / size;
         if(b>a &&
-       (array[a].dest_point - array[a].src_point) != (array[b].dest_point - array[b].src_point) &&
+       (
+            array[a].src_point != array[b].src_point ||
+            (array[a].dest_point - array[a].src_point) != (array[b].dest_point - array[b].src_point)
+        ) &&
        isPossible(gameState, dico, array[a].src_point) &&
        isPossible(gameState, dico, array[b].src_point)){
             tmp = calloc(1,sizeof(IAMove));
-            tmp->movements = calloc(2,sizeof(SMove));
+            tmp->movements = calloc(4,sizeof(SMove));
             tmp->movements[0] = array[a];
             tmp->movements[1] = array[b];
+            tmp->movements[2] = array[a];
+            tmp->movements[3] = array[b];
             tmp->nbMoves = 2;
             push(moves,tmp);
             resetDico(dico);
         }
     }
 
-    //free(dico);
+    free(dico);
     return moves;
 }
 
 int isPossible(const SGameState* const gameState, Dictionnary* dico, int key){
-    if((gameState->board[key].nbDames - dico->values[key]) > 0){
+    if((gameState->board[key].nbDames - dico->values[key]) >= 0){
         dico->values[key]++;
         return 1;
     }
@@ -401,7 +417,7 @@ int isPossible(const SGameState* const gameState, Dictionnary* dico, int key){
 }
 
 Dictionnary* createDico(){
-    Dictionnary* dico = malloc(sizeof(dico));
+    Dictionnary* dico = malloc(sizeof(Dictionnary));
     resetDico(dico);
 
     return dico;
@@ -417,14 +433,16 @@ void resetDico(Dictionnary* dico){
 Pile* combination4(SMove* array, int size){
     Pile* moves = createPile();
     IAMove* tmp = NULL;
-    int cpt,a,b,c,d = 0;
-    for(cpt=1; cpt<size*size*size*size ; cpt++){
+    int cpt,a = 0,b = 0,c = 0,d = 0;
+    for(cpt=1; cpt<(size*size*size*size) ; cpt++){
         a = cpt % size;
-        b = cpt / size;
-        c = cpt / size*size;
-        d = cpt / size*size*size;
+        b = cpt % (size*size) / size;
+        c = cpt % (size*size*size) / (size*size);
+        d = cpt / (size*size*size);
         if(d>c && c>b && b>a){
-            tmp = create_IAMove();
+            printf("%d : %d %d %d %d\n",cpt,a,b,c,d);
+            tmp = calloc(1,sizeof(IAMove));
+            tmp->movements = calloc(4,sizeof(SMove));
             tmp->movements[0] = array[a];
             tmp->movements[1] = array[b];
             tmp->movements[2] = array[c];
@@ -475,7 +493,8 @@ void init_stock_var(stock_var* var)
 
 //// ================== [Gestion de la pile]
 Pile* createPile(){
-    Pile* tmp = malloc(sizeof(Pile));
+    printf("DEBUG : Creating a new Pile\n");
+    Pile* tmp = (Pile*)malloc(sizeof(Pile));
     tmp->first = NULL;
     tmp->last = NULL;
     tmp->size = 0;
@@ -520,7 +539,7 @@ void pop(Pile* pile){
 
         pile->last = tmp->prec;
         pile->size--;
-        free(tmp);  //lib�re la m�moire
+        delete_maillon(tmp);  //lib�re la m�moire
     }
 }
 
@@ -541,6 +560,7 @@ void delete_maillon(Maillon* maillon)
 
 void delete_pile(Pile* pile)
 {
+    printf("Destroying a Pile\n");
     int i;
     for(i = 0; i < pile->size; i++)
         pop(pile);
@@ -595,10 +615,19 @@ int main(){ // Test des fonctions une à une
             fakeGame->board[i].nbDames = 1;
         }
 
-        /*
         if(i == 9){
             fakeGame->board[i].owner = WHITE;
-            fakeGame->board[i].nbDames = 3;
+            fakeGame->board[i].nbDames = 1;
+        }
+        /*
+        if(i == 7){
+            fakeGame->board[i].owner = WHITE;
+            fakeGame->board[i].nbDames = 1;
+        }
+
+        if(i == 11){
+            fakeGame->board[i].owner = WHITE;
+            fakeGame->board[i].nbDames = 1;
         }
         */
 
@@ -622,7 +651,7 @@ int main(){ // Test des fonctions une à une
 	}
 	*/
 
-    dices[0]=1;
+    dices[0]=3;
     dices[1]=3;
 
 
