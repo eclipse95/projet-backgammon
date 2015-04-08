@@ -73,6 +73,10 @@ typedef struct
     int onlyBarUsed;
 } stock_var;
 
+typedef struct{
+    int values[24];
+} Dictionnary;
+
 
 
 
@@ -100,6 +104,11 @@ IAMove* create_IAMove();
 void delete_IAMove(IAMove*);
 
 void realloc_IAMove(IAMove*, int);
+
+// Dictionnary
+Dictionnary* createDico();
+void resetDico(Dictionnary* dico);
+int isPossible(const SGameState* const gameState, Dictionnary* dico, int key);
 
 
 // std function
@@ -140,6 +149,6 @@ IAMove* getBest(IA* allMovements);
 
 Pile* combination1(SMove* array, int size);
 
-Pile* combination2(SMove* array, int size);
+Pile* combination2(SMove* array, int size, const SGameState * const gameState);
 
 Pile* combination4(SMove* array, int size);
