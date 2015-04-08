@@ -314,7 +314,8 @@ Pile* combination2(SMove* array, int size){
     for(cpt=1; cpt<size*size ; cpt++){
         a = cpt % size;
         b = cpt / size;
-        if(b>a){
+        if(b>a &&
+       (array[a].dest_point - array[a].src_point) != (array[b].dest_point - array[b].src_point)){
             tmp = calloc(1,sizeof(IAMove));
             tmp->movements = calloc(2,sizeof(SMove));
             tmp->movements[0] = array[a];       //probleme type SMove / ?
