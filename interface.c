@@ -44,6 +44,38 @@ SMove* getAllPossibleMoves(SGameState *gameState, int player, unsigned char dice
 	return moves;
 }
 
+int getXSquare(int id)
+{
+	return 0;
+}
+int getYSquare(int id)
+{
+	return 0;
+}
+void drawSquare(SGameState *gameState, int id)
+{
+	int x=getXSquare(id);
+	int y=getYSquare(id);
+}
+void drawMultiplier(SGameState *gameState)
+{
+	return 0;
+}
+void drawDice(SGameState *gameState,unsigned char dice[2])
+{
+	return 0;
+}
+void drawAll(SGameState *gameState)
+{
+	int i;
+	for(i=0;i<24;i++)
+	{
+		drawSquare(gameState,i);
+	}
+	drawMultiplier(gameState);
+	drawDice(gameState);
+}
+
 int main(int argc, char** argv)
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0 )
