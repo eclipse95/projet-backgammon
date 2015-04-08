@@ -393,11 +393,9 @@ Pile* combination2(SMove* array, int size, const SGameState* const gameState){ /
        isPossible(gameState, dico, array[a].src_point) &&
        isPossible(gameState, dico, array[b].src_point)){
             tmp = calloc(1,sizeof(IAMove));
-            tmp->movements = calloc(4,sizeof(SMove));
+            tmp->movements = calloc(2,sizeof(SMove));
             tmp->movements[0] = array[a];
             tmp->movements[1] = array[b];
-            tmp->movements[2] = array[a];
-            tmp->movements[3] = array[b];
             tmp->nbMoves = 2;
             push(moves,tmp);
             resetDico(dico);
