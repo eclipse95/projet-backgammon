@@ -5,6 +5,7 @@
 
 #endif //PROJET_BACKGAMMON_LIBRAIRY_H
 
+// Version finale
 
 typedef enum {
     BLACK = 0,

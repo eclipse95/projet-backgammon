@@ -27,4 +27,5 @@ $ make
 
 ##Dépendance
 * L'interface utilse les bibliothèques SDL (vers. 1.2). De préference, utiliser un environnement Linux pour compiler.
+* Sinon, le projet utilise les bibliothèques standard.
 

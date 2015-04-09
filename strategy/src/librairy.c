@@ -4,6 +4,9 @@
 #include "../include/librairy.h"
 #include <assert.h>
 
+
+// Version finale
+
 // variable globale
 stock_var var_globale;
 
@@ -57,7 +60,7 @@ int TakeDouble(const SGameState * const gameState)
 
     int score = getGlobalScore(gameState);
 
-    if(score < -10){
+    if(score < -10){        // 10 ou - 10
         return 0;
     }
     else{
@@ -263,10 +266,9 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         }
             break;
     }
+
     assert(allMovements->movements != NULL || nbMove == 0);
     assert(allMovements->movements->size > 0);
-
-
     printf("DEBUG : Number of plays possible = %d\n", allMovements->movements->size);
 
     var_globale.onlyBarUsed = 0;
@@ -406,7 +408,7 @@ Pile* combination1(SMove* array, int size){
     return moves;
 }
 
-Pile* combination2(SMove* array, int size, const SGameState* const gameState){ //TODO use a dictionnary
+Pile* combination2(SMove* array, int size, const SGameState* const gameState){
     Pile* moves = createPile();
 
     IAMove* tmp = NULL;
@@ -638,12 +640,16 @@ void delete_IAMove(IAMove* move) // C'est quoi ça ?
 }
 
 
-int main(){ // Test des fonctions une à une
+int main(){     // Test des fonctions une à une
+    unsigned char dices[2];
+    unsigned int nbMoves;
+    SMove moves[4];
+    int i;
+    SGameState* fakeGame = malloc(sizeof(SGameState));
+
     init_stock_var(&var_globale);
     var_globale.me = WHITE;
 
-    SGameState* fakeGame = malloc(sizeof(SGameState));
-    int i;
     for(i=0; i<24; i++){
         fakeGame->board[i].owner = NOBODY;
         fakeGame->board[i].nbDames = 0;
@@ -674,9 +680,7 @@ int main(){ // Test des fonctions une à une
     fakeGame->turn = 0;
     fakeGame->stake = 1;
 
-    unsigned char dices[2];
-    SMove moves[4];
-    unsigned int nbMoves;
+
 
     dices[0]=2;
     dices[1]=3;
@@ -686,14 +690,10 @@ int main(){ // Test des fonctions une à une
     printf("Init successful\n");
 
     PlayTurn(fakeGame,dices,moves,&nbMoves,0);
-
+    free(fakeGame);
 
     return 0;
 }
-
-
-
-
 
 
 
@@ -784,9 +784,6 @@ void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[
     printf("DEBUG : End of branch\n");
     //return; // Fin d'une branche
 }
-
-// TODO free allMovements
-// TODO free array
 
 void freeAll(IA* ia, SMove* array, IAMove* res){
     Maillon* tmp = ia->movements->first;
