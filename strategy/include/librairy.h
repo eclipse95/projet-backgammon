@@ -145,7 +145,7 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 void init_stock_var(stock_var* var);
 
-IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]);
+IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2], SMove* array);
 
 IA* getAllScores(const SGameState* const gameState, IA* allMovements);
 
@@ -166,3 +166,4 @@ int getDest(int src, int length);
 int inArray(int needle,int* haystack, int length);
 SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2], int* arraySize);
 void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[2], int nbMove, int seed, int actPos, int deepness, ArrayTmp* done, SMove* array, int* arraySize);
+void freeAll(IA* ia, SMove* array, IAMove* res);

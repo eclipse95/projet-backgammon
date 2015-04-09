@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "librairy.h"
+#include "../include/librairy.h"
 #include <assert.h>
 
 // variable globale
@@ -70,9 +70,10 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 {
     IA* movements = NULL;
     IAMove* res = NULL;
+    SMove* array = NULL;
 
     //generate All Moves Possible
-    movements = getAllMovements(gameState,dices);
+    movements = getAllMovements(gameState,dices, array);
     assert(movements != NULL);
     assert(movements->movements != NULL);
     assert(movements->movements->size > 0);
@@ -104,15 +105,15 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
         printf("\tmove %d : from %d to %d\n",ite+1,res->movements[ite].src_point,res->movements[ite].dest_point);
     }
 
-    free(movements);
+    freeAll(movements, array, res);
 }
 
 
 // Unofficial Functions
 
 
-IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2]){
-    IA* allMovements = (IA*) calloc(1,sizeof(IA));
+IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2], SMove* array){
+    IA* allMovements = malloc(sizeof(IA));
     int nbMove = 0;
     if(dices[0] == dices[1]){
         nbMove = 4;
@@ -120,7 +121,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     else{
         nbMove = 2;
     }
-    SMove* array = calloc(15*nbMove, sizeof(SMove));// Stocke la liste des mouvements possibles pendant ce tour (peut contenir des doublons)
+    array = calloc(15*nbMove, sizeof(SMove));// Stocke la liste des mouvements possibles pendant ce tour (peut contenir des doublons)
     // Maximum de (15*nbMove) mouvements car il y a 15 jetons par joueur
 
 
@@ -134,6 +135,9 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     int /*ite,*/dice,mov;
     if(gameState->bar[var_globale.me] > 0){ // Recherche des mouvements depuis la barre
         if(gameState->bar[var_globale.me] >= nbMove){
+            var_globale.onlyBarUsed = 1;
+        }
+        else{
             var_globale.onlyBarUsed = 1;
         }
 
@@ -161,7 +165,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         }
     }
     if(var_globale.onlyBarUsed == 0){ // Recherche des mouvements possibles sur le terrain
-
+    free(array);
     array = getAllMove(gameState, dices, &arraySize);
     /*
         for(ite=0; ite<24; ite++){
@@ -234,7 +238,6 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         printf("DEBUG : move %d => from %d to %d\n",j,array[j].src_point,array[j].dest_point);
     }
 
-
     switch(nbMove)
     {
     case 4:
@@ -279,13 +282,11 @@ IA* getAllScores(const SGameState* const gameState, IA* allMovements){
     Maillon* tmp = allMovements->movements->first;
     do{
         IAMove* moves = tmp->movement;
-        moves->score = malloc(sizeof(IAScore));
-        moves->score->score = 0;
-        moves->score->notSafe = 0;
+        moves->score = getScore(gameState, moves);
 
         assert(tmp->movement->score != NULL);
 
-        tmp->movement->score->score = globalScore - getScore(gameState, moves)->score;
+        moves->score->score = globalScore - moves->score->score;
 
         tmp = tmp->suiv;
     }while(tmp != NULL);
@@ -347,8 +348,12 @@ IAMove* getBest(IA* allMovements){
     int maxScore = -1;
     IAMove* best = NULL;
     IAMove* move = NULL;
+    assert(allMovements != NULL);
+    assert(allMovements->movements != NULL);
+    assert(allMovements->movements->first != NULL);
     Maillon* tmp = allMovements->movements->first;
 
+    /*
     do{
         move = tmp->movement;
         assert(move != NULL);
@@ -359,7 +364,10 @@ IAMove* getBest(IA* allMovements){
         tmp = tmp->suiv;
     }while(tmp != NULL);
 
+    */
+
     if(best == NULL){
+        tmp = allMovements->movements->first;
         do{
             move = tmp->movement;
             assert(move != NULL);
@@ -369,6 +377,10 @@ IAMove* getBest(IA* allMovements){
 
             tmp = tmp->suiv;
         }while(tmp != NULL);
+    }
+
+    if(best == NULL){
+        best = allMovements->movements->first->movement;
     }
 
     return best;
@@ -411,9 +423,11 @@ Pile* combination2(SMove* array, int size, const SGameState* const gameState){ /
        isPossible(gameState, dico, &array[a]) &&
        isPossible(gameState, dico, &array[b])){
             tmp = calloc(1,sizeof(IAMove));
-            tmp->movements = calloc(2,sizeof(SMove));
+            tmp->movements = calloc(4,sizeof(SMove));
             tmp->movements[0] = array[a];
             tmp->movements[1] = array[b];
+            tmp->movements[2] = array[a];
+            tmp->movements[3] = array[b];
             tmp->nbMoves = 2;
             push(moves,tmp);
             resetDico(dico);
@@ -473,7 +487,13 @@ Pile* combination4(SMove* array, int size){
 }
 
 int getDest(int src, int length){
-    int dest = src - (-1*var_globale.me)*length;
+    int dest = 0;
+    if(var_globale.me == WHITE){
+        dest = src + length;
+    }
+    else{
+        dest = src - length;
+    }
     if(dest > 24){
         dest = 24;
     }
@@ -762,4 +782,33 @@ void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[
     }
     printf("DEBUG : End of branch\n");
     //return; // Fin d'une branche
+}
+
+// TODO free allMovements
+// TODO free array
+
+void freeAll(IA* ia, SMove* array, IAMove* res){
+    Maillon* tmp = ia->movements->first;
+    while(tmp->suiv != NULL){
+
+        // FREE MAILLON
+        IAMove* tmp2 = tmp->movement;
+
+        free(tmp2->score);
+        free(tmp2->movements);
+        free(tmp2);
+
+        tmp = tmp->suiv;
+        free(tmp->prec);
+    }
+
+    free(tmp);
+    free(ia->movements);
+    free(ia);
+
+    free(array);
+
+    free(res->movements);
+    free(res->score);
+    free(res);
 }
