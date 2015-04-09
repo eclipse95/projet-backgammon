@@ -8,8 +8,12 @@
 #include <assert.h>
 
 #define TAILLE_PION 40
+#define W_DICE 39
+#define H_DICE 41
 #define X_WINDOW 800
 #define Y_WINDOW 600
+#define FONT "Sans.ttf"
+#define FONT_SIZE 24
 
 /* TODO
  * transparence ? sans tout changer si possible. A essayer : setcolorkey sur les surfaces dans le loader
@@ -167,11 +171,18 @@ void drawSquare(SGameState *gameState, int id, SDL_Texture* tabSprite[], SDL_Ren
 	for(i=0;i<square.nbDames;i++)
 	{
 		printf("Tour de boucle affiche dames %i\n",i);
-		SDL_Rect dest={x,y+i*TAILLE_PION*multiplier,TAILLE_PION,TAILLE_PION};
+		SDL_Rect dest={x,y+i*TAILLE_PION*multiplier,TAILLE_PION,TAILLE_PION}; 752 326
 		SDL_RenderCopy(renderer,texture,NULL,&dest);
 	}
 }
-
+// dessine le texte text à l'endroit x et y
+void drawText(int x,int y, char* text)
+{
+	TTF_Font* Sans = TTF_OpenFont(FONT, FONT_SIZE); //this opens a font style and sets a size
+	SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", White);
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); 
+}
 // dessine le videau
 void drawMultiplier(SGameState *gameState,SDL_Texture* tabSprite[], SDL_Renderer* renderer)
 {
@@ -181,6 +192,10 @@ void drawMultiplier(SGameState *gameState,SDL_Texture* tabSprite[], SDL_Renderer
 // dessine les dés
 void drawDice(SGameState *gameState,unsigned char dice[2],SDL_Texture* tabSprite[], SDL_Renderer* renderer)
 {
+	SDL_Rect dest = {753,223,W_DICE,H_DICE};
+	SDL_RenderCopy(renderer,tabSprite[(int)dice[0]+2],NULL,&dest);
+	SDL_Rect dest2 = {752,326,W_DICE,H_DICE};
+	SDL_RenderCopy(renderer,tabSprite[(int)dice[1]+2],NULL,&dest2);
 	printf("drawdice\n");
 }
 
@@ -198,7 +213,6 @@ void drawAll(SGameState *gameState, SDL_Texture* tabSprite[], SDL_Renderer* rend
 	drawMultiplier(gameState,tabSprite,renderer);
 	drawDice(gameState,dice,tabSprite,renderer);
 }
-
 // fonction custom pour automatiser le process de création de textures
 SDL_Texture* textureLoader(char* filename,SDL_Surface* surfaceLoader, SDL_Renderer* renderer)
 {
@@ -236,6 +250,12 @@ int main(int argc, char** argv)
 	ptabSprite[0]=textureLoader("./img/backgammon.bmp",surfaceLoader,pRenderer);
 	ptabSprite[1]=textureLoader("./img/black.bmp",surfaceLoader,pRenderer);
 	ptabSprite[2]=textureLoader("./img/white.bmp",surfaceLoader,pRenderer);
+	ptabSprite[3]=textureLoader("./img/1.bmp",surfaceLoader,pRenderer);
+	ptabSprite[4]=textureLoader("./img/2.bmp",surfaceLoader,pRenderer);
+	ptabSprite[5]=textureLoader("./img/3.bmp",surfaceLoader,pRenderer);
+	ptabSprite[6]=textureLoader("./img/4.bmp",surfaceLoader,pRenderer);
+	ptabSprite[7]=textureLoader("./img/5.bmp",surfaceLoader,pRenderer);
+	ptabSprite[8]=textureLoader("./img/6.bmp",surfaceLoader,pRenderer);
 	SDL_Rect dest = { 0,0, X_WINDOW,Y_WINDOW};
 	SDL_RenderCopy(pRenderer,ptabSprite[0],NULL,NULL); // Copie du sprite
 	drawAll(gameState,ptabSprite,pRenderer);
