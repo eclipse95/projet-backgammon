@@ -29,7 +29,7 @@ typedef struct {
 
 typedef struct
 {
-    unsigned int src_point; /*0 = Bar, [1,23] = terrain, 24 = home*/
+    unsigned int src_point;     /*0 = Bar, [1,23] = terrain, 24 = home*/
     unsigned int dest_point;
 } SMove;
 
@@ -49,6 +49,7 @@ typedef struct
     IAScore* score;
 } IAMove;
 
+// Pile
 struct Maillon{
     Maillon* prec;
     IAMove* movement;
@@ -68,16 +69,16 @@ typedef struct{
 
 typedef struct
 {
-    int score;
-    Player me;
-    int onlyBarUsed;
+    int score;          /*<! Score à attendre */
+    Player me;          /*<! Couleur de l'ia */
+    int onlyBarUsed;    /*<! Témoin si jeton sur la bar */
 } stock_var;
 
 typedef struct{
     int values[24];
 } Dictionnary;
 
-
+// Structure pour la récursion
 typedef struct{
     int done[4];
     int size;
@@ -100,7 +101,7 @@ void push(Pile*, IAMove*);
 
 void pop(Pile*);
 
-IAMove* top(Pile*); // problème retour pile* / IAMove*
+IAMove* top(Pile*);
 
 // destructeurs
 void delete_maillon(Maillon*);
@@ -139,10 +140,8 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 
 
-// custom struct and functions
-
-
-
+// Fonction pour les structures non API
+/* Fonction d'initialisation de la structure contenant les vars globales*/
 void init_stock_var(stock_var* var);
 
 IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2], SMove* array);
@@ -159,11 +158,20 @@ Pile* combination1(SMove* array, int size);
 
 Pile* combination2(SMove* array, int size, const SGameState * const gameState);
 
+/*  */
 Pile* combination4(SMove* array, int size);
 
-
+/* Renvoi la case à la distance spécifiée de la source */
 int getDest(int src, int length);
+
+/* Vérifie la présence d'un entier dans un tableau */
 int inArray(int needle,int* haystack, int length);
+
+/* Fonction d'initialisation la génération des mouvements */
 SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2], int* arraySize);
+
+/* Fonction permetant génération des mouvements possibles */
 void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[2], int nbMove, int seed, int actPos, int deepness, ArrayTmp* done, SMove* array, int* arraySize);
+
+/* Fonction pour libérer toutes les structures de PlayTurn() */
 void freeAll(IA* ia, SMove* array, IAMove* res);

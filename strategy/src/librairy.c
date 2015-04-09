@@ -74,6 +74,7 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
     //generate All Moves Possible
     movements = getAllMovements(gameState,dices, array);
+
     assert(movements != NULL);
     assert(movements->movements != NULL);
     assert(movements->movements->size > 0);
@@ -133,7 +134,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
     // Generate all possible movements in array
     int /*ite,*/dice,mov;
-    if(gameState->bar[var_globale.me] > 0){ // Recherche des mouvements depuis la barre
+    if(gameState->bar[var_globale.me] > 0){     // Recherche des mouvements depuis la barre
         if(gameState->bar[var_globale.me] >= nbMove){
             var_globale.onlyBarUsed = 1;
         }
@@ -167,7 +168,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     if(var_globale.onlyBarUsed == 0){ // Recherche des mouvements possibles sur le terrain
     free(array);
     array = getAllMove(gameState, dices, &arraySize);
-    /*
+    /* Version itérative
         for(ite=0; ite<24; ite++){
             Square tmp = gameState->board[ite];
             if(tmp.owner == var_globale.me){
