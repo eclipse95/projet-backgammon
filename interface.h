@@ -10,9 +10,12 @@ SMove* getAllPossibleMoves(SGameState *gameState, int player, unsigned char dice
 int getXSquare(int id);
 int getYSquare(int id);
 void drawSquare(SGameState *gameState, int id, SDL_Texture* tabSprite[], SDL_Renderer* renderer);
+void drawText(int x,int y, char* text,SDL_Renderer* renderer);
 void drawMultiplier(SGameState *gameState,SDL_Texture* tabSprite[], SDL_Renderer* renderer);
+void drawOut(SGameState *gameState,SDL_Texture* tabSprite[], SDL_Renderer* renderer);
+void drawBar(SGameState *gameState,SDL_Texture* tabSprite[], SDL_Renderer* renderer);
 void drawDice(SGameState *gameState,unsigned char dice[2],SDL_Texture* tabSprite[], SDL_Renderer* renderer);
-void drawAll(SGameState *gameState, SDL_Texture* tabSprite[], SDL_Renderer* renderer);
+void drawAll(SGameState *gameState, SDL_Texture* tabSprite[], SDL_Renderer* renderer,unsigned char dice[2]);
 SDL_Texture* textureLoader(char* filename,SDL_Surface* surfaceLoader,SDL_Renderer* renderer);
 void guiInit(GUI_Block* gui);
 void guiQuit(GUI_Block* gui);
