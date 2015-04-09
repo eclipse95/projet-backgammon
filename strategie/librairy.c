@@ -123,14 +123,15 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
     SMove* array = calloc(15*nbMove, sizeof(SMove));// Stocke la liste des mouvements possibles pendant ce tour (peut contenir des doublons)
     // Maximum de (15*nbMove) mouvements car il y a 15 jetons par joueur
 
-    int* arrayTmp = calloc(nbMove, sizeof(int));
+
+    //int* arrayTmp = calloc(nbMove, sizeof(int));
     int arraySize = 0;
-    int arrayTmpSize = 0;
+    //int arrayTmpSize = 0;
 
 
 
     // Generate all possible movements in array
-    int ite,dice,mov;
+    int /*ite,*/dice,mov;
     if(gameState->bar[var_globale.me] > 0){ // Recherche des mouvements depuis la barre
         if(gameState->bar[var_globale.me] >= nbMove){
             var_globale.onlyBarUsed = 1;
@@ -160,17 +161,21 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         }
     }
     if(var_globale.onlyBarUsed == 0){ // Recherche des mouvements possibles sur le terrain
+
+    array = getAllMove(gameState, dices, &arraySize);
+    /*
         for(ite=0; ite<24; ite++){
             Square tmp = gameState->board[ite];
             if(tmp.owner == var_globale.me){
 
                 // Gestion des mouvements successifs
                 int canContinue = 1;
+                int startPoint = ite;
                 while(canContinue == 1){
                     canContinue = 0;
-                    for(dice=0; dice < nbMove%3; dice++){
+                    for(dice=0; dice < nbMove; dice++){
                         int val = dices[dice%2];
-                        int dest = getDest(ite,val);
+                        int dest = getDest(startPoint,val);
 
                         if(!inArray(dice, arrayTmp, arrayTmpSize)) {
                             if (gameState->board[dest].owner != var_globale.me &&
@@ -181,18 +186,32 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
                             else {
                                 SMove* move = malloc(sizeof(SMove));
                                 move->dest_point = (unsigned int) dest + 1;
-                                move->src_point = (unsigned int) ite + 1;
+                                move->src_point = (unsigned int) startPoint + 1;
 
 
                                 mov = 0;
-                                while (mov < gameState->board[ite].nbDames && mov < nbMove) {
+                                if(startPoint == ite){ // Si on est dans le premier saut d'une chaine alors on compte tout les jetons de cette case
+                                    while (mov < gameState->board[ite].nbDames && mov < nbMove) {
+                                        array[arraySize++] = *move;
+                                        printf("Adding a move : %d to %d\n",move->src_point, move->dest_point);
+                                        mov++;
+                                    }
+                                }
+                                else{ // Sinon on n'en compte qu'un
                                     array[arraySize++] = *move;
-                                    mov++;
+                                    printf("Adding a move : %d to %d\n",move->src_point, move->dest_point);
                                 }
                                 arrayTmp[arrayTmpSize++] = dice;
-                                //canContinue = 1; //Comment this line to disable successive movements (DEBUG)
+                                if(arrayTmpSize < nbMove){
+                                    canContinue = 1; //Comment this line to disable successive movements (DEBUG)
+                                    startPoint = dest;
+                                }
 
                             }
+                        }
+                        if(nbMove == 4){
+                            canContinue = 0;
+                            break; // Evite les doublons inutiles en cas de double
                         }
                     }
                 }
@@ -201,12 +220,11 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
             arrayTmpSize = 0; // Nouveau tableau des dés pour une nouvelle case
         }
+*/
     }
 
-    //Fin de l'algo ici
 
-    if(arraySize == 0)
-        return NULL;
+    //Fin de l'algo ici
 
     printf("DEBUG : number of possible movements = %d\n",arraySize);
 
@@ -219,31 +237,31 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
     switch(nbMove)
     {
-        case 4:
-            printf("DEBUG : Used combination of 4\n");
-            allMovements->movements = combination4(array,arraySize);
-            if(allMovements->movements->size > 0){
-                break;
-            }
-            delete_pile(allMovements->movements);
-        case 2:
-            printf("DEBUG : Used combination of 2\n");
-            allMovements->movements = combination2(array,arraySize, gameState);
-            if(allMovements->movements->size > 0){
-                break;
-            }
-            delete_pile(allMovements->movements);
-        default:
-            printf("DEBUG : Used combination of 1\n");
-            allMovements->movements = combination1(array,arraySize);
-            if(allMovements->movements->size > 0){
-                nbMove = 0;
-            }
+    case 4:
+        printf("DEBUG : Used combination of 4\n");
+        allMovements->movements = combination4(array,arraySize);
+        if(allMovements->movements->size > 0){
+            break;
+        }
+        delete_pile(allMovements->movements);
+    case 2:
+        printf("DEBUG : Used combination of 2\n");
+        allMovements->movements = combination2(array,arraySize, gameState);
+        if(allMovements->movements->size > 0){
+            break;
+        }
+        delete_pile(allMovements->movements);
+    default:
+        printf("DEBUG : Used combination of 1\n");
+        allMovements->movements = combination1(array,arraySize);
+        if(allMovements->movements->size > 0){
+            nbMove = 0;
+        }
             break;
     }
+    assert(allMovements->movements != NULL || nbMove == 0);
+    assert(allMovements->movements->size > 0);
 
-    assert(allMovements->movements != NULL);
-    assert(allMovements->movements->size > 0 || nbMove == 0);
 
     printf("DEBUG : Number of plays possible = %d\n", allMovements->movements->size);
 
@@ -390,8 +408,8 @@ Pile* combination2(SMove* array, int size, const SGameState* const gameState){ /
             array[a].src_point != array[b].src_point ||
             (array[a].dest_point - array[a].src_point) != (array[b].dest_point - array[b].src_point)
         ) &&
-       isPossible(gameState, dico, array[a].src_point) &&
-       isPossible(gameState, dico, array[b].src_point)){
+       isPossible(gameState, dico, &array[a]) &&
+       isPossible(gameState, dico, &array[b])){
             tmp = calloc(1,sizeof(IAMove));
             tmp->movements = calloc(4,sizeof(SMove));
             tmp->movements[0] = array[a];
@@ -408,9 +426,11 @@ Pile* combination2(SMove* array, int size, const SGameState* const gameState){ /
     return moves;
 }
 
-int isPossible(const SGameState* const gameState, Dictionnary* dico, int key){
-    if((gameState->board[key].nbDames - dico->values[key]) >= 0){
-        dico->values[key]++;
+int isPossible(const SGameState* const gameState, Dictionnary* dico, SMove* move){
+    if( (int)gameState->board[move->src_point].nbDames - dico->values[move->src_point] >= 0){
+        dico->values[move->src_point]++;
+
+        dico->values[move->dest_point]--;
         return 1;
     }
     return 0;
@@ -502,7 +522,7 @@ Pile* createPile(){
     return tmp;
 }
 
-/* Constructeur de maillon */
+//// Constructeur de maillon
 Maillon* createMaillon(){
     Maillon* tmp = calloc(1,sizeof(Maillon));
     tmp->prec = NULL;
@@ -539,7 +559,7 @@ void pop(Pile* pile){
 
         pile->last = tmp->prec;
         pile->size--;
-        delete_maillon(tmp);  //lib�re la m�moire
+        delete_maillon(tmp);  //libere la memoire
     }
 }
 
@@ -600,7 +620,6 @@ void delete_IAMove(IAMove* move) // C'est quoi ça ?
 
 
 int main(){ // Test des fonctions une à une
-    // TODO
     init_stock_var(&var_globale);
     var_globale.me = WHITE;
 
@@ -614,12 +633,11 @@ int main(){ // Test des fonctions une à une
             fakeGame->board[i].owner = WHITE;
             fakeGame->board[i].nbDames = 1;
         }
-
         if(i == 9){
             fakeGame->board[i].owner = WHITE;
             fakeGame->board[i].nbDames = 1;
         }
-        /*
+
         if(i == 7){
             fakeGame->board[i].owner = WHITE;
             fakeGame->board[i].nbDames = 1;
@@ -629,8 +647,6 @@ int main(){ // Test des fonctions une à une
             fakeGame->board[i].owner = WHITE;
             fakeGame->board[i].nbDames = 1;
         }
-        */
-
     }
     fakeGame->bar[0]=0,fakeGame->bar[1]=0;
     fakeGame->out[0]=0,fakeGame->out[1]=0;
@@ -643,15 +659,7 @@ int main(){ // Test des fonctions une à une
     SMove moves[4];
     unsigned int nbMoves;
 
-    /*
-    int j;
-	for(j=0;j<2;j++)
-	{
-		dices[j]=(rand() % 6)+1;		// peut-être cast nécessaire
-	}
-	*/
-
-    dices[0]=3;
+    dices[0]=2;
     dices[1]=3;
 
 
@@ -662,4 +670,98 @@ int main(){ // Test des fonctions une à une
 
 
     return 0;
+}
+
+
+
+
+
+
+
+
+
+// GetAllMoveRec()
+SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2], int* arraySize){
+
+    printf("Start Recursion\n");
+    unsigned int nbMove;
+    if(dices[0] == dices[1]){
+        nbMove = 4;
+    }
+    else{
+        nbMove = 2;
+    }
+
+    SMove* array = calloc(15*nbMove, sizeof(SMove));
+
+    // Struct + Init struct
+    ArrayTmp* arrayTmp = malloc(sizeof(ArrayTmp));
+    int i,j;
+    arrayTmp->size = 0; // Init struct
+    for(i=0; i<4; i++){
+        arrayTmp->deepness[i].size = 0;
+        for(j=0; j<4; j++){
+            arrayTmp->deepness[i].done[j] = 0;
+        }
+    }
+
+
+    int ite;
+    for(ite=0 ; ite < 24 ; ite++){
+        if(gameState->board[ite].owner == var_globale.me){
+            //
+            printf("DEBUG : rec for piece = %d\n",ite);
+
+            getAllMoveRec(gameState, dices, nbMove, ite, ite, 0, arrayTmp, array, arraySize);
+            arrayTmp->deepness[0].size = 0;
+        }
+    }
+
+    printf("DEBUG : number of possible movements = %d\n",*arraySize);
+
+    return array;
+}
+
+void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[2], int nbMove, int seed, int actPos, int deepness, ArrayTmp* done, SMove* array, int* arraySize){
+    if((nbMove - deepness - done->deepness[deepness].size) <= 0){
+        printf("DEBUG : End of leaf (%d %d %d)\n", nbMove, deepness, done->deepness[deepness].size);
+        return; // Fin d'une feuille
+    }
+
+    int dice;
+    for(dice = 0; dice < nbMove%3; dice++){
+        int dest = getDest(actPos, dices[dice]);
+        printf("DEBUG : De en cours = %d\n",dices[dice]);
+        if(!inArray(dice, done->deepness[deepness].done, done->deepness[deepness].size)
+           && (deepness == 0 || (deepness>0 && dice != done->deepness[deepness-1].done[done->deepness[deepness-1].size-1]))){
+            if (gameState->board[dest].owner != var_globale.me &&
+                gameState->board[dest].owner != -1 &&
+                gameState->board[dest].nbDames >= 2) {
+                //NEXT !
+            }
+            else {
+                //
+                SMove* move = malloc(sizeof(SMove));
+                move->dest_point = (unsigned int) dest + 1;
+                move->src_point = (unsigned int) actPos + 1;
+
+                int mov=0;
+                while (mov < gameState->board[seed].nbDames &&
+                       (mov < nbMove ||(mov < 2 && actPos != seed))) {
+                    array[(*arraySize)++] = *move;
+                    printf("Adding a move : %d to %d\n",move->src_point, move->dest_point);
+                    mov++;
+                }
+                done->deepness[deepness].done[done->deepness[deepness].size++] = dice;
+                if(done->deepness[deepness].done[done->size++] < nbMove){
+                    getAllMoveRec(gameState,dices,nbMove,seed,dest,deepness+1,done,array,arraySize);
+
+                    done->deepness[deepness+1].size = 0; // Clear du tableau de profondeur supérieure
+
+                }
+            }
+        }
+    }
+    printf("DEBUG : End of branch\n");
+    //return; // Fin d'une branche
 }

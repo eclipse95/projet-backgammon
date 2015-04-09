@@ -78,7 +78,15 @@ typedef struct{
 } Dictionnary;
 
 
+typedef struct{
+    int done[4];
+    int size;
+} ArrayTmpDeep;
 
+typedef struct{
+    ArrayTmpDeep deepness[4];
+    int size;
+} ArrayTmp;
 
 /* Constructeur de pile */
 Pile* createPile();
@@ -108,7 +116,7 @@ void realloc_IAMove(IAMove*, int);
 // Dictionnary
 Dictionnary* createDico();
 void resetDico(Dictionnary* dico);
-int isPossible(const SGameState* const gameState, Dictionnary* dico, int key);
+int isPossible(const SGameState* const gameState, Dictionnary* dico, SMove* key);
 
 
 // std function
@@ -152,3 +160,9 @@ Pile* combination1(SMove* array, int size);
 Pile* combination2(SMove* array, int size, const SGameState * const gameState);
 
 Pile* combination4(SMove* array, int size);
+
+
+int getDest(int src, int length);
+int inArray(int needle,int* haystack, int length);
+SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2], int* arraySize);
+void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[2], int nbMove, int seed, int actPos, int deepness, ArrayTmp* done, SMove* array, int* arraySize);
