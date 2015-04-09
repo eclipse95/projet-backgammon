@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "backgammon.h"
+#include "interface.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <math.h>
 #include <assert.h>
 
@@ -171,12 +173,12 @@ void drawSquare(SGameState *gameState, int id, SDL_Texture* tabSprite[], SDL_Ren
 	for(i=0;i<square.nbDames;i++)
 	{
 		printf("Tour de boucle affiche dames %i\n",i);
-		SDL_Rect dest={x,y+i*TAILLE_PION*multiplier,TAILLE_PION,TAILLE_PION}; 752 326
+		SDL_Rect dest={x,y+i*TAILLE_PION*multiplier,TAILLE_PION,TAILLE_PION};	
 		SDL_RenderCopy(renderer,texture,NULL,&dest);
 	}
 }
 // dessine le texte text à l'endroit x et y
-void drawText(int x,int y, char* text)
+void drawText(int x,int y, char* text,SDL_Renderer* renderer)
 {
 	TTF_Font* Sans = TTF_OpenFont(FONT, FONT_SIZE); //this opens a font style and sets a size
 	SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
@@ -203,6 +205,9 @@ void drawDice(SGameState *gameState,unsigned char dice[2],SDL_Texture* tabSprite
 void drawAll(SGameState *gameState, SDL_Texture* tabSprite[], SDL_Renderer* renderer)
 {
 	printf("drawall\n");
+	SDL_RenderClear(renderer);
+	SDL_Rect dest = { 0,0, X_WINDOW,Y_WINDOW};
+	SDL_RenderCopy(renderer,tabSprite[0],NULL,NULL); // Fond
 	int i;
 	unsigned char dice[2]; // à enlever plus tard
 	for(i=0;i<24;i++)
@@ -212,6 +217,7 @@ void drawAll(SGameState *gameState, SDL_Texture* tabSprite[], SDL_Renderer* rend
 	}
 	drawMultiplier(gameState,tabSprite,renderer);
 	drawDice(gameState,dice,tabSprite,renderer);
+	SDL_RenderPresent(renderer); // on display tout
 }
 // fonction custom pour automatiser le process de création de textures
 SDL_Texture* textureLoader(char* filename,SDL_Surface* surfaceLoader, SDL_Renderer* renderer)
@@ -225,47 +231,57 @@ SDL_Texture* textureLoader(char* filename,SDL_Surface* surfaceLoader, SDL_Render
 	return returnValue;
 }
 
-int main(int argc, char** argv)
+void guiInit(GUI_Block* gui)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0 )
+	if (SDL_Init(SDL_INIT_VIDEO) != 0 )
     {
         fprintf(stdout,"Échec de l'initialisation de la SDL (%s)\n",SDL_GetError());
         return -1;
     }
+    TTF_Init();
 	int i;
-	SGameState* gameState=malloc(sizeof(SGameState));
-	InitBoard(gameState);
 	/* Création de la fenêtre */
-	SDL_Window* pWindow = NULL;
-	pWindow = SDL_CreateWindow("Backgammon",SDL_WINDOWPOS_UNDEFINED,
+	gui->window = SDL_CreateWindow("Backgammon",SDL_WINDOWPOS_UNDEFINED,
 															  SDL_WINDOWPOS_UNDEFINED,
 															  X_WINDOW,
 															  Y_WINDOW,
 															  SDL_WINDOW_SHOWN);
 
-	SDL_Renderer *pRenderer = SDL_CreateRenderer(pWindow,-1,SDL_RENDERER_ACCELERATED); // Init renderer
+	gui->renderer = SDL_CreateRenderer(gui->window,-1,SDL_RENDERER_ACCELERATED); // Init renderer
+	
 	// Bloc de génération initiale des textures à utiliser
-	SDL_Texture* ptabSprite[9];
 	SDL_Surface* surfaceLoader;
-	ptabSprite[0]=textureLoader("./img/backgammon.bmp",surfaceLoader,pRenderer);
-	ptabSprite[1]=textureLoader("./img/black.bmp",surfaceLoader,pRenderer);
-	ptabSprite[2]=textureLoader("./img/white.bmp",surfaceLoader,pRenderer);
-	ptabSprite[3]=textureLoader("./img/1.bmp",surfaceLoader,pRenderer);
-	ptabSprite[4]=textureLoader("./img/2.bmp",surfaceLoader,pRenderer);
-	ptabSprite[5]=textureLoader("./img/3.bmp",surfaceLoader,pRenderer);
-	ptabSprite[6]=textureLoader("./img/4.bmp",surfaceLoader,pRenderer);
-	ptabSprite[7]=textureLoader("./img/5.bmp",surfaceLoader,pRenderer);
-	ptabSprite[8]=textureLoader("./img/6.bmp",surfaceLoader,pRenderer);
-	SDL_Rect dest = { 0,0, X_WINDOW,Y_WINDOW};
-	SDL_RenderCopy(pRenderer,ptabSprite[0],NULL,NULL); // Copie du sprite
-	drawAll(gameState,ptabSprite,pRenderer);
-	SDL_RenderPresent(pRenderer); // Affichage
-	SDL_Delay(3000);
+	// pré-chargement de toutes les surfaces en texture
+	gui->tabSprite[0]=textureLoader("./img/backgammon.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[1]=textureLoader("./img/black.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[2]=textureLoader("./img/white.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[3]=textureLoader("./img/1.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[4]=textureLoader("./img/2.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[5]=textureLoader("./img/3.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[6]=textureLoader("./img/4.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[7]=textureLoader("./img/5.bmp",surfaceLoader,gui->renderer);
+	gui->tabSprite[8]=textureLoader("./img/6.bmp",surfaceLoader,gui->renderer);
+}
+
+void guiQuit(GUI_Block* gui)
+{
+	int i;
 	for(i=0;i<9;i++)
-		SDL_DestroyTexture(ptabSprite[i]); // Libération de la mémoire
-	SDL_DestroyRenderer(pRenderer); // Libération de la mémoire
+		SDL_DestroyTexture(gui->tabSprite[i]); // Libération de la mémoire
+	SDL_DestroyRenderer(gui->renderer); // Libération de la mémoire
+	SDL_DestroyWindow(gui->window);
+	TTF_Quit();
+	SDL_Quit();
+}
 
-    SDL_Quit();
-
+int main(int argc, char** argv)
+{
+	SGameState* gameState=malloc(sizeof(SGameState));
+	InitBoard(gameState);
+	GUI_Block gui;
+	guiInit(&gui);
+	drawAll(gameState,gui.tabSprite,gui.renderer);// Affichage
+	SDL_Delay(3000);
+	guiQuit(&gui);
     return 0;
 }
