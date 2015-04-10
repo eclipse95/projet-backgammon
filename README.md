@@ -1,11 +1,6 @@
 # projet-backgammon
 Projet de développement en C du jeu backgammon, comprenant une interface graphique ainsi qu'une intelligence artificielle.
 
-##TODO
-* Section Interface
-    * Copie des gameState avant chaque modif par la lib pour pas de tricherie ?
-    * Benjo, la vraie interface : TOUT ?
-
 ##Compilation
 Compilation de l'IA :
 
