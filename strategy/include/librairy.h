@@ -73,6 +73,7 @@ typedef struct
     int score;          /*<! Score à attendre */
     Player me;          /*<! Couleur de l'ia */
     int onlyBarUsed;    /*<! Témoin si jeton sur la bar */
+    int readyToFinish;  /*<! Vrai si les pions sont en disposition de rentrer à la maison */
 } stock_var;
 
 typedef struct{

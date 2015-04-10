@@ -3,6 +3,7 @@
 #include <string.h>
 #include "librairy.h"
 #include "../../strategie/librairy.h"
+//#include "../../strategie/librairy.h"
 #include <assert.h>
 
 
@@ -108,7 +109,7 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     printf("DEBUG : returned moves =>\n");
     int ite;
     for(ite=0 ; ite<res->nbMoves ; ite++){
-        res->movements[ite].src_point++;
+        res->movements[ite].src_point++; // Incrémentation à cause des différences d'index entre IA et interface
         res->movements[ite].dest_point++;
         moves[ite] = res->movements[ite]; // Renvoi de chaque mouvement
 
@@ -145,7 +146,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
 
     // Generate all possible movements in array
-    int /*ite,*/dice,mov;
+    int dice,mov;
     if(gameState->bar[var_globale.me] > 0){ // Recherche des mouvements depuis la barre
         if(gameState->bar[var_globale.me] >= nbMove){
             var_globale.onlyBarUsed = 1;
@@ -513,10 +514,8 @@ void init_stock_var(stock_var* var)
     var->me = NOBODY;
     var->score = 0;
     var->onlyBarUsed = 0;
+    var->readyToFinish = 0;
 }
-
-
-
 
 
 
@@ -678,15 +677,38 @@ SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2
         }
     }
 
+    int found = 0;
+    var_globale->readyToFinish = 0;
 
     int ite;
-    for(ite=0 ; ite < 24 ; ite++){
-        if(gameState->board[ite].owner == var_globale.me){
-            //
-            printf("DEBUG : rec for piece = %d\n",ite);
+    if(var_globale.me == WHITE) {
+        for (ite = 0; ite < 24; ite++) {
+            if (gameState->board[ite].owner == var_globale.me) {
+                if (ite > 18 && found == 0) {
+                    var_globale->readyToFinish = 1;
+                }
+                found = 1;
+                //
+                printf("DEBUG : rec for piece = %d\n", ite);
 
-            getAllMoveRec(gameState, dices, nbMove, ite, ite, 0, arrayTmp, array, arraySize);
-            arrayTmp->deepness[0].size = 0;
+                getAllMoveRec(gameState, dices, nbMove, ite, ite, 0, arrayTmp, array, arraySize);
+                arrayTmp->deepness[0].size = 0;
+            }
+        }
+    }
+    else{
+        for (ite = 24; ite > 0; ite--) {
+            if (gameState->board[ite].owner == var_globale.me) {
+                if (ite < 6 && found == 0) {
+                    var_globale->readyToFinish = 1;
+                }
+                found = 1;
+                //
+                printf("DEBUG : rec for piece = %d\n", ite);
+
+                getAllMoveRec(gameState, dices, nbMove, ite, ite, 0, arrayTmp, array, arraySize);
+                arrayTmp->deepness[0].size = 0;
+            }
         }
     }
 
@@ -713,6 +735,9 @@ void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[
             if (gameState->board[dest].owner != var_globale.me &&
                 gameState->board[dest].owner != -1 &&
                 gameState->board[dest].nbDames >= 2) {
+                //NEXT !
+            }
+            else if((dest == 24 ||dest == 0) && var_globale->readyToFinish == 0){ // Ne pas rentrer à la maison si les pions ne sont pas correctement placés
                 //NEXT !
             }
             else {
