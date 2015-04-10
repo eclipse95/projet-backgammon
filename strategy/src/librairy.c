@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "librairy.h"
+#include "../../strategie/librairy.h"
 #include <assert.h>
 
 
@@ -101,15 +102,16 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
     printf("DEBUG : nbMov of best choice = %d\n", res->nbMoves);
 
-    nbMove = &res->nbMoves;
+    *nbMove = res->nbMoves; // Renvoi du nombre de mouvement
 
     printf("DEBUG : returned nbMove = %d\n",*nbMove);
     printf("DEBUG : returned moves =>\n");
     int ite;
     for(ite=0 ; ite<res->nbMoves ; ite++){
-        moves[ite] = res->movements[ite];
+        moves[ite] = res->movements[ite]; // Renvoi de chaque mouvement
 
         printf("\tmove %d : from %d to %d\n",ite+1,res->movements[ite].src_point,res->movements[ite].dest_point);
+        printf("\tmove %d : from %d to %d\n",moves[ite].src_point,moves[ite].dest_point);
     }
 
     freeAll(movements, array, res);
@@ -184,6 +186,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         for (j = 0; j < arraySize; j++) {
             printf("DEBUG : move %d => from %d to %d\n", j, array[j].src_point, array[j].dest_point);
         }
+    }
 
     switch(nbMove)
     {
