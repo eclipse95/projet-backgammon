@@ -14,6 +14,8 @@ Compilation de l'interface :
 $ make interface (bientôt disponible)
 ```
 
+Sinon utiliser le fichier INT-Makefile
+
 Compilation de l'ensemble :
 
 ```
@@ -27,3 +29,6 @@ $ make
 ##IA
 Notre IA (conçue et codée par Fibri) examine chacun des pions. Pour chaque pion, elle génére toutes les combinaisons de 
 déplacement possible. Elle pondère chaque des déplacements et choisit le déplacement "optimal".
+
+##Interface
+Pour plus d'information sur l'interface, merci de consulter README-INTERFACE.
