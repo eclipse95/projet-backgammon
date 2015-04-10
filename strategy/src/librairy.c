@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "librairy.h"
+#include "../../strategie/librairy.h"
 #include <assert.h>
 
 
@@ -107,6 +108,8 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     printf("DEBUG : returned moves =>\n");
     int ite;
     for(ite=0 ; ite<res->nbMoves ; ite++){
+        res->movements[ite].src_point++;
+        res->movements[ite].dest_point++;
         moves[ite] = res->movements[ite]; // Renvoi de chaque mouvement
 
         printf("\tmove %d : from %d to %d\n",ite+1,res->movements[ite].src_point,res->movements[ite].dest_point);
