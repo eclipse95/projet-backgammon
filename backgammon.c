@@ -6,14 +6,28 @@
 #include "backgammon.h"
 #include "interface/interface.h"
 
-int main()
+int main(int argc, char *argv[])
 {
+	int score = 5; // score à atteindre
+	char pathLib1[48], pathLib2[48];	// chemin des bibliothèques
+	if(argc == 4)
+	{
+		sscanf(argv[2], "%d", &score);
+		strcpy(pathLib1,argv[3]);
+		strcpy(pathLib2,argv[4]);
+	}
+	else if(argc > 4)
+	{
+		printf("Il y a trop d'argument.");
+		exit(1);
+	}
+
 	srand(time((time_t) NULL));    //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
 	void* libj1,* libj2;
 
 	//// Chargement des bibliothèques et de leurs fonctions
 	//Joueur 1
-	if ((libj1=dlopen("libj1.so",RTLD_LAZY))==NULL) { return(-1); }
+	if ((libj1=dlopen(pathLib1,RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j1InitLibrary=InitLibrary;
 	if ((j1InitLibrary=(pfInitLibrary)dlsym(libj1,"InitLibrary"))==NULL) { return(-1); }
 	pfStartMatch j1StartMatch=StartMatch;
@@ -32,7 +46,7 @@ int main()
 	if ((j1PlayTurn=(pfPlayTurn)dlsym(libj1,"PlayTurn"))==NULL) { return(-1); }
 
 	//Joueur 2
-	if ((libj2=dlopen("libj2.so",RTLD_LAZY))==NULL) { return(-1); }
+	if ((libj2=dlopen(pathLib2,RTLD_LAZY))==NULL) { return(-1); }
 	pfInitLibrary j2InitLibrary=InitLibrary;
 	if ((j2InitLibrary=(pfInitLibrary)dlsym(libj2,"InitLibrary"))==NULL) { return(-1); }
 	pfStartMatch j2StartMatch=StartMatch;
