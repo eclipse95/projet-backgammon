@@ -98,9 +98,6 @@ Pile* createPile();
 /* Constructeur de maillon */
 Maillon* createMaillon();
 
-/* Constructeur IAMove */
-IAMove* create_IAMove();
-
 short estVide(Pile* pile);
 
 void push(Pile*, IAMove*);
@@ -113,10 +110,6 @@ IAMove* top(Pile*);
 void delete_maillon(Maillon*);
 
 void delete_pile(Pile*);
-
-/* Destructeur IAMove (non utilisé ?) */
-void delete_IAMove(IAMove*);
-
 
 // Dictionnary
 Dictionnary* createDico();
@@ -146,6 +139,7 @@ void PlayTurn(const SGameState * const gameState, const unsigned char dices[2], 
 
 // Fonction pour les structures non API
 /* Fonction d'initialisation de la structure contenant les vars globales*/
+
 void init_stock_var(stock_var* var);
 
 IA* getAllMovements(const SGameState* const gameState, const unsigned char dices[2], SMove* array);
