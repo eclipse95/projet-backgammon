@@ -676,14 +676,14 @@ SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2
     }
 
     int found = 0;
-    var_globale->readyToFinish = 0;
+    var_globale.readyToFinish = 0;
 
     int ite;
     if(var_globale.me == WHITE) {
         for (ite = 0; ite < 24; ite++) {
             if (gameState->board[ite].owner == var_globale.me) {
                 if (ite > 18 && found == 0) {
-                    var_globale->readyToFinish = 1;
+                    var_globale.readyToFinish = 1;
                 }
                 found = 1;
                 //
@@ -698,7 +698,7 @@ SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2
         for (ite = 24; ite > 0; ite--) {
             if (gameState->board[ite].owner == var_globale.me) {
                 if (ite < 6 && found == 0) {
-                    var_globale->readyToFinish = 1;
+                    var_globale.readyToFinish = 1;
                 }
                 found = 1;
                 //
@@ -735,7 +735,7 @@ void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[
                 gameState->board[dest].nbDames >= 2) {
                 //NEXT !
             }
-            else if((dest == 24 ||dest == 0) && var_globale->readyToFinish == 0){ // Ne pas rentrer à la maison si les pions ne sont pas correctement placés
+            else if((dest == 24 ||dest == 0) && var_globale.readyToFinish == 0){ // Ne pas rentrer à la maison si les pions ne sont pas correctement placés
                 //NEXT !
             }
             else {
