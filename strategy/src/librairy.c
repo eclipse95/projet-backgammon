@@ -185,6 +185,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
             printf("DEBUG : move %d => from %d to %d\n", j, array[j].src_point, array[j].dest_point);
         }
 
+    }
     switch(nbMove)
     {
     case 4:
