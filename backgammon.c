@@ -6,12 +6,10 @@
 #include "backgammon.h"
 #include "interface.h"
 
-//void deroulement_du_jeu()  --->>> mis par le prof
 int main()
 {
 	srand(time((time_t) NULL));    //permet de créer une nouvelle seed random (donc de "relancer" le tableau à chaque compilation)
 	void* libj1,* libj2;
-	// à chaque utilisation de gameState, ne pas oublier de faire une copie de tous les éléments (pas fait ici)
 
 	//// Chargement des bibliothèques et de leurs fonctions
 	//Joueur 1
@@ -72,10 +70,10 @@ int main()
 	int tries[2];
 	tries[BLACK]=3;
 	tries[WHITE]=3;
-	//SGameState* copy = (SGameState*) malloc(sizeof(SGameState)); //allocation mémoire de la copie de gameState //copie à utiliser a chaque modif de gamestate pour verif que le gars a pas modif directement dessus ?
-	//copyState(gameState, copy);
+	//SGameState* copy = (SGameState*) malloc(sizeof(SGameState)); //allocation mémoire de la copie de gameState
+	//copyState(gameState, copy); //on voulait au début copier le gameState avant chacune de ses modifications et vérifier qu'il na pas été modifié par la librairie; mais au final nous avons jugé que c'était inutile
 
-	while (IsMatchOver(gameState)!=-1)
+	while (IsMatchOver(gameState)==-1)
 	{
 		j1StartGame(BLACK);
 		j2StartGame(WHITE);

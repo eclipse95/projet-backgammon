@@ -4,7 +4,6 @@
 #include <string.h>
 #include "backgammon.h"
 #include <math.h>
-//besoin de math dans le makefile pour abs
 
 int IsMatchOver(SGameState *gameState)
 {
@@ -15,7 +14,7 @@ int IsMatchOver(SGameState *gameState)
 
 int IsGameOver(SGameState *gameState)
 {
-	if (gameState->blackScore==5) { return BLACK; }
+	if (gameState->blackScore==5) { return BLACK; }//on va en 5 points
 	else if (gameState->whiteScore==5) { return WHITE; }
 	else { return NOBODY; }
 }
@@ -26,7 +25,7 @@ void InitBoard(SGameState* gameState)
 	int i;
 	for (i=0; i<12; i++)
 	{
-		switch(i)
+		switch(i)//les pions de board
 		{
 		case 0 :
 			gameState->board[i].nbDames=2;
@@ -105,7 +104,7 @@ int emptyMoves(SMove moves[4], int tailleMoves) //on vide les moves après chaqu
 }
 
 
-int verif_sens(SMove moves[4], int player, int tailleMoves)
+int verif_sens(SMove moves[4], int player, int tailleMoves)//un joueur ne doit pas se déplacer à l'envers
 {
 	int i;
 	for (i=0; i<tailleMoves; i++) 
@@ -130,7 +129,7 @@ int verif_sens(SMove moves[4], int player, int tailleMoves)
 	return 0;
 }
 
-int verif_taille_deplacement(SMove moves[4], int tailleMoves, unsigned char dices[2])
+int verif_taille_deplacement(SMove moves[4], int tailleMoves, unsigned char dices[2])// le joueur doit faire un mouvement de la taille de celui des dés
 {
 	int i, j;
 	int nb_des;
@@ -172,7 +171,7 @@ int verif_taille_deplacement(SMove moves[4], int tailleMoves, unsigned char dice
 	return 0;
 }
 
-int is_blocked (int roll, SGameState* gameState, Player player)
+int is_blocked (int roll, SGameState* gameState, Player player)//vérifie que le joueur peut faire au moins un mouvement de taille roll
 {
 	int i;
 	if (player == BLACK)
@@ -232,7 +231,7 @@ int is_blocked (int roll, SGameState* gameState, Player player)
 	return 1;
 }
 
-int move(SMove moves[4], SGameState* gameState, int tailleMoves, int player, unsigned char dices[2])
+int move(SMove moves[4], SGameState* gameState, int tailleMoves, int player, unsigned char dices[2])//vérification de validité du mouvement et réalisation du mouvement
 {
 	int i;
 	if (verif_sens(moves, player, tailleMoves)==0 && verif_taille_deplacement(moves, tailleMoves, dices)==0)
