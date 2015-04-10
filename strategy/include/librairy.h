@@ -107,12 +107,6 @@ void delete_maillon(Maillon*);
 
 void delete_pile(Pile*);
 
-IAMove* create_IAMove();
-
-void delete_IAMove(IAMove*);
-
-void realloc_IAMove(IAMove*, int);
-
 // Dictionnary
 Dictionnary* createDico();
 void resetDico(Dictionnary* dico);
