@@ -24,3 +24,6 @@ $ make
 * L'interface utilse les bibliothèques SDL (vers. 1.2). De préference, utiliser un environnement Linux pour compiler.
 * Sinon, le projet utilise les bibliothèques standard.
 
+##IA
+Notre IA (conçue et codée par Fibri) examine chacun des pions. Pour chaque pion, elle génére toutes les combinaisons de 
+déplacement possible. Elle pondère chaque des déplacements et choisit le déplacement "optimal".
