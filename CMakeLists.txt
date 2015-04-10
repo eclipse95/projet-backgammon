@@ -1,3 +1,5 @@
+# CMake non fonctionnel
+
 cmake_minimum_required(VERSION 2.8.4)
 project(projet-backgammon)
 
@@ -13,5 +15,5 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s -O2 -DNDEBUG")
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES *.o)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES *.so)
 
-add_executable(strategie/librairy.h strategie/librairy.c)
+add_executable(myexe strategie/librairy.h strategie/librairy.c)
 

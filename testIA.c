@@ -2,7 +2,7 @@
 // Created by Twilibri on 07/04/2015.
 //
 
-#include "ia_lib.h"
+#include "strategie\librairy.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,6 +16,7 @@ int main() {
     }
 
     testCombi(array, size);
+
 
     return 0;
 }
