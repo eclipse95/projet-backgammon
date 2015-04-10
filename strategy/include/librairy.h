@@ -80,11 +80,13 @@ typedef struct{
 } Dictionnary;
 
 // Structure pour la récursion
+/* Structure pour stocker les feuilles de la récursion */
 typedef struct{
     int done[4];
     int size;
 } ArrayTmpDeep;
 
+/* Structure pour stocker les branches de la récursion */
 typedef struct{
     ArrayTmpDeep deepness[4];
     int size;
@@ -95,6 +97,9 @@ Pile* createPile();
 
 /* Constructeur de maillon */
 Maillon* createMaillon();
+
+/* Constructeur IAMove */
+IAMove* create_IAMove();
 
 short estVide(Pile* pile);
 
@@ -109,11 +114,9 @@ void delete_maillon(Maillon*);
 
 void delete_pile(Pile*);
 
-IAMove* create_IAMove();
-
+/* Destructeur IAMove (non utilisé ?) */
 void delete_IAMove(IAMove*);
 
-void realloc_IAMove(IAMove*, int);
 
 // Dictionnary
 Dictionnary* createDico();
@@ -149,17 +152,19 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
 IA* getAllScores(const SGameState* const gameState, IA* allMovements);
 
-int getGlobalScore(const SGameState* const gameState); // not finished
+int getGlobalScore(const SGameState* const gameState);
 
-IAScore* getScore(const SGameState* const gameState, IAMove* moves); // probleme type
+IAScore* getScore(const SGameState* const gameState, IAMove* moves);
 
 IAMove* getBest(IA* allMovements);
 
+/* Renvoi un mouvement possible */
 Pile* combination1(SMove* array, int size);
 
+/* renvoi combinaison de 2 mouvements*/
 Pile* combination2(SMove* array, int size, const SGameState * const gameState);
 
-/*  */
+/* renvoi combinaison de 4 mouvements */
 Pile* combination4(SMove* array, int size);
 
 /* Renvoi la case à la distance spécifiée de la source */

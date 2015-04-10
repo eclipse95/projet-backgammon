@@ -78,6 +78,7 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
     //generate All Moves Possible
     movements = getAllMovements(gameState,dices, array);
 
+    // assertions pour les tests
     assert(movements != NULL);
     assert(movements->movements != NULL);
     assert(movements->movements->size > 0);
@@ -88,11 +89,14 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
 
     //get Score
     movements = getAllScores(gameState, movements);
+
+    // assertions pour les tests
     assert(movements != NULL);
     assert(movements->movements->first->movement->score != NULL);
 
     //return first
     res = getBest(movements);
+
     assert(res != NULL);
     assert(res->nbMoves <= 4);
 
@@ -130,8 +134,8 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
 
 
     //int* arrayTmp = calloc(nbMove, sizeof(int));
-    int arraySize = 0;
     //int arrayTmpSize = 0;
+    int arraySize = 0;
 
 
 
@@ -169,7 +173,7 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         }
     }
     if(var_globale.onlyBarUsed == 0){ // Recherche des mouvements possibles sur le terrain
-    free(array);
+    free(array);    //suppression de la mémoire avant nouvelle allocation
     array = getAllMove(gameState, dices, &arraySize);
     /* Version itérative
         for(ite=0; ite<24; ite++){
@@ -601,7 +605,7 @@ void delete_maillon(Maillon* maillon)
 
 void delete_pile(Pile* pile)
 {
-    printf("Destroying a Pile\n");
+    printf("DEBUG : Destroying a Pile\n");
     int i;
     for(i = 0; i < pile->size; i++)
         pop(pile);
@@ -617,19 +621,8 @@ IAMove* create_IAMove()
     return tmp;
 }
 
-void realloc_IAMove(IAMove* move, int new_size ) // C'est quoi ça ?
-{
-    if(move != NULL)
-    {
-        if (move->nbMoves > new_size)
-            move->nbMoves += new_size;
-        else
-            move->nbMoves = new_size;
-        //move = realloc()
-    }
-}
 
-void delete_IAMove(IAMove* move) // C'est quoi ça ?
+void delete_IAMove(IAMove* move)
 {
     if(move != NULL)
     {
@@ -702,7 +695,7 @@ int main(){     // Test des fonctions une à une
 // GetAllMoveRec()
 SMove* getAllMove(const SGameState* const gameState, const unsigned char dices[2], int* arraySize){
 
-    printf("Start Recursion\n");
+    printf("DEBUG : Start Recursion\n");
     unsigned int nbMove;
     if(dices[0] == dices[1]){
         nbMove = 4;
@@ -768,7 +761,7 @@ void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[
                 while (mov < gameState->board[seed].nbDames &&
                        (mov < nbMove ||(mov < 2 && actPos != seed))) {
                     array[(*arraySize)++] = *move;
-                    printf("Adding a move : %d to %d\n",move->src_point, move->dest_point);
+                    printf("DEBUG : Adding a move : %d to %d\n",move->src_point, move->dest_point);
                     mov++;
                 }
                 done->deepness[deepness].done[done->deepness[deepness].size++] = dice;
