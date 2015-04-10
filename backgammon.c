@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "arbitre.h"
 #include "backgammon.h"
-#include "interface.h"
+#include "interface/interface.h"
 
 int main()
 {
