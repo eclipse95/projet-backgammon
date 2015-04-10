@@ -1,10 +1,10 @@
--- COMMENT UTILISER L'INTERFACE --
+### -- COMMENT UTILISER L'INTERFACE --
 
 -----------
 Infos de base
 -----------
 
-La GUI se base sur un struct GUI_Block
+La GUI se base sur un struct GUI_Block.
 
 Selon interface.h :
 
