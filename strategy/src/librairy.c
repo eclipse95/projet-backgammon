@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "librairy.h"
+#include "../../strategie/librairy.h"
 #include <assert.h>
 
 
@@ -110,7 +111,7 @@ void PlayTurn(const SGameState* const gameState, const unsigned char dices[2], S
         moves[ite] = res->movements[ite]; // Renvoi de chaque mouvement
 
         printf("\tmove %d : from %d to %d\n",ite+1,res->movements[ite].src_point,res->movements[ite].dest_point);
-        printf("\tmove %d : from %d to %d\n",moves[ite].src_point,moves[ite].dest_point);
+        printf("\tmove %d : from %d to %d\n",ite+1,moves[ite].src_point,moves[ite].dest_point);
     }
 
     freeAll(movements, array, res);
@@ -162,8 +163,8 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
             }
             else{
                 SMove* move = malloc(sizeof(SMove));
-                move->dest_point = 0;
-                move->src_point = (unsigned int) dest+1;
+                move->src_point = -1;
+                move->dest_point = (unsigned int) dest;
 
                 mov = 0;
                 while(mov < gameState->bar[var_globale.me] && mov<nbMove) {
@@ -715,8 +716,8 @@ void getAllMoveRec(const SGameState* const gameState, const unsigned char dices[
             else {
                 //
                 SMove* move = malloc(sizeof(SMove));
-                move->dest_point = (unsigned int) dest + 1;
-                move->src_point = (unsigned int) actPos + 1;
+                move->dest_point = (unsigned int) dest;
+                move->src_point = (unsigned int) actPos;
 
                 int mov=0;
                 while (mov < gameState->board[seed].nbDames &&
