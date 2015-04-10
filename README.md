@@ -11,7 +11,7 @@ $ make strategy
 Compilation de l'interface :
 
 ```
-$ make interface (bientôt disponible)
+$ make interface
 ```
 
 Sinon utiliser le fichier INT-Makefile
