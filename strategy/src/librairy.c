@@ -187,7 +187,6 @@ IA* getAllMovements(const SGameState* const gameState, const unsigned char dices
         }
     }
 
-    }
     switch(nbMove)
     {
     case 4:
