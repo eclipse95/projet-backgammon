@@ -16,12 +16,12 @@ Selon interface.h :
 
 A moins de faire une utilisation très spécifique, n'utilisez que guiInit, guiQuit et drawAll
 
-A peut être enlever dans les includes : backgammon.h (déjà include dans l'arbitre), assert.h (je m'en sers plus, mais au cas où vous voulez test)
+A peut être enlever dans les includes : backgammon.h (déjà include dans l'arbitre), assert.h (je ne m'en sers plus, mais au cas où vous voulez test)
 
-Pour les constants avec #define, ne modifiez que celles qui n'ont pas de //* sauf si vous voulez vraiment vous casser les couilles à changer le code en dur
+Pour les constants avec #define, ne modifiez que celles qui n'ont pas de //* sauf si vous voulez vraiment vous "amusez" à changer le code en dur
 
-Pour la compilation, utilisez tout à la fin de la ligne -lSDL2main -lSDL2 -lSDL2_ttf ****DANS L'ORDRE****
-Cf mon Makefile pour l'exemple (INT-Makefile)
+Pour la compilation, utilisez tout à la fin de la ligne -lSDL2main -lSDL2 -lSDL2_ttf ***DANS L'ORDRE***
+cf. mon Makefile pour l'exemple (INT-Makefile)
 
 -----------
 Demo de code
