@@ -57,7 +57,7 @@ int main()
 	j2InitLibrary(name2);
 	j1StartMatch(5);
 	j2StartMatch(5);
-
+	
 	SGameState* gameState=InitState();
 	SMove moves[4];
 	unsigned int nbMoves;
@@ -72,7 +72,10 @@ int main()
 	tries[WHITE]=3;
 	//SGameState* copy = (SGameState*) malloc(sizeof(SGameState)); //allocation mémoire de la copie de gameState
 	//copyState(gameState, copy); //on voulait au début copier le gameState avant chacune de ses modifications et vérifier qu'il na pas été modifié par la librairie; mais au final nous avons jugé que c'était inutile
-
+	GUI_Block gui;//pour l'interface
+	
+	guiInit(&gui); //initialisation
+	
 	while (IsMatchOver(gameState)==-1)
 	{
 		j1StartGame(BLACK);
@@ -84,6 +87,9 @@ int main()
 			rollDice(dices);
 			if(dices[BLACK] > dices[WHITE]) { player=BLACK; }else{ player=WHITE; }
 		}
+		
+		drawAll(gameState,gui.tabSprite,gui.renderer,dice);//affiche le plateau
+		sleep(2);//pour pouvoir distinguer les différents mouvements sur l'interface
 		
 		startingPlayer = player; //savoir qui a commencé permet de compter les turns
 		
@@ -121,6 +127,10 @@ int main()
 					{
 						tries[player]--;
 					}
+					
+					drawAll(gameState,gui.tabSprite,gui.renderer,dice);//affiche le plateau
+					sleep(2);//pour pouvoir distinguer les différents mouvements sur l'interface
+					
 					if (tries[player]==0) //victoire adverse si 0 tries
 					{
 						gameState->out[1-player]=15;
@@ -155,6 +165,10 @@ int main()
 					{
 						tries[player]--;
 					}
+					
+					drawAll(gameState,gui.tabSprite,gui.renderer,dice);//affiche le plateau
+					sleep(2);//pour pouvoir distinguer les différents mouvements sur l'interface
+					
 					if (tries[player]==0) //victoire adverse si 0 tries
 					{
 						gameState->out[1-player]=15;
