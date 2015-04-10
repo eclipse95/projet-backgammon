@@ -12,18 +12,12 @@ export LDLIBS        +=
 
 .PHONY: interface strategy clean doc
 
-#all: interface strategy
+all: interface strategy
 
-#interface strategy:
-#	@$(MAKE) -C $@
-
-strategy:
+interface strategy:
 	@$(MAKE) -C $@
 
 clean:
 	@$(MAKE) -C strategy clean
-#	@$(MAKE) -C interface clean
-#	@rm -rf doc
+	@$(MAKE) -C interface clean
 
-#doc:
-#	@doxygen
