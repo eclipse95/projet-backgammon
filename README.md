@@ -30,10 +30,15 @@ $ make
 ##IA
 Notre IA (conçue et codée par Fibri) examine chacun des pions. Pour chaque pion, elle génére toutes les combinaisons de 
 déplacement possible. Elle pondère chaque combinaison de déplacements et choisit la meilleure.
+
 La pondération se calcule par l'avancement que la combinaison apporte.
+
 Exemple : On a un pion en case 6 et deux dés : 3 et 1
+
 Le mouvement 6 => 9 donne une pondération de +3.
+
 Le mouvement 9 => 10 donne une pondération de +1.
+
 La combinaison donne une pondération de +4.
 
 ##Interface
